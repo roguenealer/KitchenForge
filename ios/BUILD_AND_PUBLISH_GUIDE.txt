@@ -1,0 +1,185 @@
+================================================================
+  KITCHENFORGE iOS - BUILD & PUBLISH GUIDE
+================================================================
+
+IMPORTANT: You need a Mac to build and submit iOS apps.
+If you don't have a Mac, see "OPTION B: No Mac" below.
+
+
+==============================
+ PREREQUISITES
+==============================
+
+1. Apple Developer Account ($99/year)
+   - Go to: https://developer.apple.com/programs/
+   - Click "Enroll"
+   - Sign in with your Apple ID (or create one)
+   - Pay the $99/year fee
+   - Approval usually takes 24-48 hours
+
+2. A Mac with Xcode installed
+   - Download Xcode from the Mac App Store (free)
+   - Xcode 15+ recommended
+
+3. XcodeGen (generates the .xcodeproj file)
+   - Install: brew install xcodegen
+
+
+==============================
+ OPTION A: BUILD ON A MAC
+==============================
+
+STEP 1: Copy the project to your Mac
+   - Copy the entire KitchenForge/ios/ folder to your Mac
+
+STEP 2: Generate the Xcode project
+   cd /path/to/KitchenForge/ios
+   xcodegen generate
+
+   This creates KitchenForge.xcodeproj from project.yml
+
+STEP 3: Open in Xcode
+   open KitchenForge.xcodeproj
+
+STEP 4: Configure signing
+   - In Xcode, click the KitchenForge target
+   - Go to "Signing & Capabilities" tab
+   - Check "Automatically manage signing"
+   - Select your Apple Developer team
+   - Bundle ID should be: com.kitchenforge.app
+
+STEP 5: Resize the App Icon
+   - The icon needs to be exactly 1024x1024 pixels
+   - Open icon-1024.png in Preview or any image editor
+   - Resize to 1024x1024 if needed
+   - Replace the file in Assets.xcassets/AppIcon.appiconset/
+
+STEP 6: Test on Simulator
+   - Select an iPhone simulator (iPhone 15 Pro)
+   - Press Cmd+R to build and run
+   - Verify everything works
+
+STEP 7: Test on a real device (recommended)
+   - Connect your iPhone via USB
+   - Select it as the build target
+   - Press Cmd+R
+   - Trust the developer certificate on your phone:
+     Settings > General > VPN & Device Management
+
+STEP 8: Create an Archive for App Store
+   - Select "Any iOS Device" as the target
+   - Product > Archive (Cmd+Shift+B won't work, use Archive)
+   - Wait for the build to complete
+   - Xcode Organizer will open automatically
+
+STEP 9: Upload to App Store Connect
+   - In the Organizer, click "Distribute App"
+   - Select "App Store Connect"
+   - Click "Upload"
+   - Follow the prompts
+   - Wait for processing (5-30 minutes)
+
+STEP 10: Set up in App Store Connect
+   - Go to: https://appstoreconnect.apple.com
+   - Click "My Apps" > "+" > "New App"
+   - Fill in:
+     * Platform: iOS
+     * Name: KitchenForge - Smart Pantry & Recipes
+     * Primary Language: English (U.S.)
+     * Bundle ID: com.kitchenforge.app
+     * SKU: kitchenforge-ios-001
+   - Click "Create"
+
+STEP 11: Fill in App Store listing
+   - Use the text from APP_STORE_LISTING.txt
+   - Upload screenshots (see screenshot sizes in listing)
+   - Set category to "Food & Drink"
+   - Set age rating to 4+
+   - Add privacy policy URL
+   - Set pricing to Free
+
+STEP 12: Submit for Review
+   - Select the build you uploaded in Step 9
+   - Fill in Review Information section
+   - Click "Submit for Review"
+   - Apple review typically takes 24-48 hours
+
+
+==============================
+ OPTION B: NO MAC (Cloud Build)
+==============================
+
+If you don't have a Mac, you can use cloud services:
+
+1. CODEMAGIC (Recommended - Free tier available)
+   - https://codemagic.io
+   - Sign up and connect your GitHub/GitLab
+   - Push the ios/ folder to a Git repo
+   - Create a new iOS app workflow
+   - It builds on cloud Macs and can submit to App Store
+   - Free tier: 500 build minutes/month
+
+2. GITHUB ACTIONS (macOS runners)
+   - Push code to GitHub
+   - Use macos-latest runner
+   - Automate xcodegen + xcodebuild + upload
+
+3. MACINCLOUD (Rent a Mac)
+   - https://www.macincloud.com
+   - $30-50/month for a cloud Mac
+   - Full Xcode access via remote desktop
+   - Good for one-time builds
+
+
+==============================
+ TAKING SCREENSHOTS
+==============================
+
+App Store requires screenshots in specific sizes.
+Use Xcode Simulator to capture them:
+
+1. Run the app in Xcode Simulator
+2. For each required screen size:
+   - iPhone 6.7": Use iPhone 15 Pro Max simulator
+   - iPhone 6.1": Use iPhone 15 Pro simulator
+3. Navigate to each screen in the app
+4. File > Screenshot (Cmd+S) in Simulator
+5. Screenshots save to your Desktop
+
+Required screenshots (minimum 3, recommended 5):
+1. Home dashboard
+2. Pantry view
+3. Recipe list
+4. Recipe detail / Cooking mode
+5. Add Food screen
+
+
+==============================
+ COMMON ISSUES & FIXES
+==============================
+
+Q: "No signing certificate" error
+A: In Xcode > Settings > Accounts, add your Apple ID,
+   then download signing certificates.
+
+Q: "Bundle ID already taken"
+A: Try a different bundle ID like:
+   com.kitchenforge.app.ios or com.yourname.kitchenforge
+
+Q: App rejected for "WebView only"
+A: Apple may reject pure WebView apps. If so:
+   - Add a native splash screen (already included)
+   - Ensure camera/microphone features work natively
+   - Emphasize that the app has unique native integration
+   - Appeal the rejection if needed, explaining it uses
+     device hardware (camera, mic) and local storage
+
+Q: Camera/Microphone not working
+A: Make sure Info.plist has the privacy descriptions
+   (already included in the project)
+
+Q: White screen on load
+A: Check that the www/ folder is included in the
+   "Copy Bundle Resources" build phase in Xcode
+
+================================================================

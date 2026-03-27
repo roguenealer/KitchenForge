@@ -1,0 +1,74 @@
+═══════════════════════════════════════════════════════
+  KITCHENFORGE - GOOGLE PLAY STORE LISTING
+═══════════════════════════════════════════════════════
+
+APP NAME: KitchenForge - Smart Pantry & Recipes
+
+SHORT DESCRIPTION (80 chars max):
+Track food, get recipes from what you have, save money, waste nothing.
+
+FULL DESCRIPTION:
+KitchenForge is your personal kitchen assistant that tracks everything in your pantry, suggests recipes based on what you already have, and makes sure nothing goes to waste.
+
+ADD FOOD 4 EASY WAYS
+- Camera Scan: Point at your fridge and AI detects every item
+- Receipt Photo: Snap your grocery receipt to import items instantly
+- Voice: Say "Add milk that expires in 7 days" and it's done
+- Manual: Quick-add with name, quantity, cost, and expiry
+
+SMART PANTRY TRACKING
+- See all 47+ items at a glance with beautiful cards
+- Color-coded expiry indicators (red/yellow/green)
+- Search and filter by category (Produce, Dairy, Meat, Frozen)
+- Edit quantities, costs, and expiry dates with one tap
+- Total pantry value always visible
+
+RECIPE MATCHING
+- 10+ recipes sorted by how many ingredients you already own
+- Filter by cuisine: Italian, Asian, Indian, Mexican, Thai
+- Sort by best match, fastest cook time, or fewest missing items
+- Full step-by-step instructions with ingredient checklists
+- Start Cooking mode with built-in timer and checkable steps
+
+EXPIRATION RADAR
+- Push notifications before food expires
+- Customizable reminder window (1-7 days before)
+- "Expiring This Week" carousel on your dashboard
+- Recipe suggestions that use expiring items first
+
+COST TRACKING
+- Track the cost of every item you add
+- Daily, weekly, and monthly spending dashboard
+- See your total pantry value at a glance
+- Visual spending breakdown with progress bar
+
+ZERO WASTE
+- Never forget what's in your fridge again
+- Get recipe ideas that use what you have
+- One-tap "Add missing items to shopping list"
+- Mark ingredients as used after cooking
+
+Download KitchenForge and start cooking smarter today.
+
+───────────────────────────────────────────────────────
+CATEGORY: Food & Drink
+CONTENT RATING: Everyone
+PRICING: Free
+───────────────────────────────────────────────────────
+
+KEYWORDS / TAGS:
+pantry tracker, recipe finder, food waste, meal planner,
+grocery tracker, expiration tracker, kitchen organizer,
+recipe ideas, what to cook, food cost tracker,
+smart kitchen, meal prep, ingredient matcher
+
+───────────────────────────────────────────────────────
+SCREENSHOTS NEEDED (take from the preview):
+1. Home dashboard with stats + spending tracker
+2. Pantry grid with cost labels and expiry dots
+3. Recipe cards with match percentages
+4. Recipe detail with ingredients checklist
+5. Cooking mode with timer
+6. Add Food screen (camera/voice/manual tabs)
+7. Settings with dark mode
+───────────────────────────────────────────────────────

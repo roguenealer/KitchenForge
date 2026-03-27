@@ -1,0 +1,91 @@
+================================================================
+  KITCHENFORGE - APPLE APP STORE LISTING
+================================================================
+
+APP NAME: KitchenForge - Smart Pantry & Recipes
+
+SUBTITLE (30 chars max):
+Track Food, Waste Nothing
+
+PROMOTIONAL TEXT (170 chars max):
+Track your pantry, discover recipes from what you already have, and stop wasting food. AI-powered food scanning, voice input, and smart expiration alerts.
+
+DESCRIPTION:
+KitchenForge is your personal kitchen assistant that tracks everything in your pantry, suggests recipes based on what you already have, and makes sure nothing goes to waste.
+
+ADD FOOD 4 EASY WAYS
+- Camera Scan: Point at your fridge and AI detects every item
+- Receipt Photo: Snap your grocery receipt to import items instantly
+- Voice: Say "Add milk that expires in 7 days" and it's done
+- Manual: Quick-add with name, quantity, cost, and expiry
+
+SMART PANTRY TRACKING
+- See all your items at a glance with beautiful cards
+- Color-coded expiry indicators (red/yellow/green)
+- Search and filter by category (Produce, Dairy, Meat, Frozen)
+- Edit quantities, costs, and expiry dates with one tap
+- Total pantry value always visible
+
+RECIPE MATCHING
+- Recipes sorted by how many ingredients you already own
+- Filter by cuisine: Italian, Asian, Indian, Mexican, Thai
+- Sort by best match, fastest cook time, or fewest missing items
+- Full step-by-step instructions with ingredient checklists
+- Start Cooking mode with built-in timer and checkable steps
+
+EXPIRATION RADAR
+- Notifications before food expires
+- Customizable reminder window (1-7 days before)
+- "Expiring This Week" carousel on your dashboard
+- Recipe suggestions that use expiring items first
+
+COST TRACKING
+- Track the cost of every item you add
+- Daily, weekly, and monthly spending dashboard
+- See your total pantry value at a glance
+- Visual spending breakdown with progress bar
+
+Download KitchenForge and start cooking smarter today.
+
+----------------------------------------------------------------
+CATEGORY: Food & Drink
+AGE RATING: 4+
+PRICING: Free
+----------------------------------------------------------------
+
+KEYWORDS (100 chars max):
+pantry tracker,recipe finder,food waste,meal planner,grocery,expiration,kitchen,ingredient,cook
+
+----------------------------------------------------------------
+SCREENSHOTS NEEDED (iPhone 6.7" and 6.1" required):
+
+iPhone 6.7" (1290 x 2796 px) - iPhone 15 Pro Max:
+1. Home dashboard with stats + spending tracker
+2. Pantry grid with cost labels and expiry dots
+3. Recipe cards with match percentages
+4. Recipe detail with ingredients checklist
+5. Add Food screen (camera/voice/manual tabs)
+
+iPhone 6.1" (1179 x 2556 px) - iPhone 15 Pro:
+(Same 5 screenshots at this resolution)
+
+iPad 12.9" (2048 x 2732 px) - Optional but recommended:
+(Same screenshots at iPad resolution)
+
+----------------------------------------------------------------
+APP REVIEW INFORMATION:
+
+Demo Account: Not required (app works without login)
+Notes for Reviewer:
+  - The app works entirely offline with local storage
+  - Camera permission is used for food scanning (optional)
+  - Microphone permission is used for voice input (optional)
+  - No account creation or login required
+  - No in-app purchases
+  - All data stays on the device
+
+----------------------------------------------------------------
+PRIVACY POLICY URL: https://kitchenforge-app.netlify.app/privacy
+SUPPORT URL: https://kitchenforge-app.netlify.app
+MARKETING URL: https://kitchenforge-app.netlify.app
+================================================================

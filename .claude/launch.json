@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kitchenforge",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3848", "-s", "--no-clipboard", "-c", "0", "C:/Users/rogue/Desktop/KitchenForge"],
+      "port": 3848
+    },
+    {
+      "name": "kitchenforge-ios",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3849", "-s", "--no-clipboard", "-c", "0", "C:/Users/rogue/Desktop/KitchenForge/ios/KitchenForge/www"],
+      "port": 3849
+    }
+  ]
+}

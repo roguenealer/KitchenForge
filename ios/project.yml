@@ -1,0 +1,42 @@
+name: KitchenForge
+options:
+  bundleIdPrefix: com.kitchenforge
+  deploymentTarget:
+    iOS: "15.0"
+  xcodeVersion: "15.0"
+  developmentLanguage: en
+
+settings:
+  base:
+    MARKETING_VERSION: "1.2.0"
+    CURRENT_PROJECT_VERSION: "5"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  KitchenForge:
+    type: application
+    platform: iOS
+    sources:
+      - path: KitchenForge
+        excludes:
+          - "www/**"
+    resources:
+      - path: KitchenForge/www
+        buildPhase: resources
+      - path: KitchenForge/Assets.xcassets
+        buildPhase: resources
+      - path: KitchenForge/LaunchScreen.storyboard
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kitchenforge.app
+        INFOPLIST_FILE: KitchenForge/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.9"
+        GENERATE_INFOPLIST_FILE: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: "YES"
+    info:
+      path: KitchenForge/Info.plist
