@@ -11,7 +11,7 @@ workflows:
         bundle_identifier: com.kitchenforge.app
       vars:
         XCODE_SCHEME: "KitchenForge"
-      xcode: latest
+      xcode: 16.2
       cocoapods: default
     scripts:
       - name: Install XcodeGen
