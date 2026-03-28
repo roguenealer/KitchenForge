@@ -5,7 +5,7 @@ struct KitchenForgeApp: App {
     var body: some Scene {
         WindowGroup {
             WebViewContainer()
-                .ignoresSafeArea(.container, edges: .bottom)
+                .ignoresSafeArea(edges: .bottom)
                 .preferredColorScheme(.light)
         }
     }

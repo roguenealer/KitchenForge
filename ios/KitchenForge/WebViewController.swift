@@ -31,7 +31,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         config.mediaTypesRequiringUserActionForPlayback = []
 
         // Allow camera and microphone access for food scanning and voice input
-        if #available(iOS 14.5, *) {
+        if #available(iOS 15.4, *) {
             config.preferences.isElementFullscreenEnabled = true
         }
 
@@ -104,6 +104,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
     // MARK: - WKUIDelegate (Camera/Microphone permissions)
 
+    @available(iOS 15.0, *)
     func webView(_ webView: WKWebView,
                  requestMediaCapturePermissionFor origin: WKSecurityOrigin,
                  initiatedByFrame frame: WKFrameInfo,
