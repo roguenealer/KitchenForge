@@ -22,3 +22,9 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+ios_distribution.key
+ios_distribution.csr
+csr.cnf
+distribution.p12
+distribution.pem
+*.p8
