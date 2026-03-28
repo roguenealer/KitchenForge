@@ -1,8 +1,10 @@
 workflows:
   ios-workflow:
-    name: iOS Build
+    name: iOS Build & Publish
     max_build_duration: 60
     instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: KitchenForge
     environment:
       ios_signing:
         distribution_type: app_store
@@ -24,3 +26,8 @@ workflows:
     artifacts:
       - ios/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
