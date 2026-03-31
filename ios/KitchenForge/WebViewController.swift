@@ -58,12 +58,21 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     }
 
     private func loadApp() {
-        guard let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "www") else {
-            showError("Could not find app files.")
+        // Try loading from www subdirectory first (folder reference)
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "www") {
+            let directory = url.deletingLastPathComponent()
+            webView.loadFileURL(url, allowingReadAccessTo: directory)
             return
         }
-        let directory = url.deletingLastPathComponent()
-        webView.loadFileURL(url, allowingReadAccessTo: directory)
+
+        // Fallback: try loading from bundle root (group reference)
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+            let directory = Bundle.main.bundleURL
+            webView.loadFileURL(url, allowingReadAccessTo: directory)
+            return
+        }
+
+        showError("Could not find app files. Please reinstall the app.")
     }
 
     private func showError(_ message: String) {
@@ -78,6 +87,16 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     }
 
     // MARK: - WKNavigationDelegate
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        // Retry loading on navigation failure
+        loadApp()
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        // Retry loading on provisional navigation failure
+        loadApp()
+    }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

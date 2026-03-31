@@ -24,6 +24,7 @@ targets:
     resources:
       - path: KitchenForge/www
         buildPhase: resources
+        type: folder
       - path: KitchenForge/Assets.xcassets
         buildPhase: resources
     settings:
