@@ -22,11 +22,16 @@ targets:
         excludes:
           - "www/**"
     resources:
-      - path: KitchenForge/www
-        buildPhase: resources
-        type: folder
       - path: KitchenForge/Assets.xcassets
         buildPhase: resources
+    postCompileScripts:
+      - script: |
+          echo "Copying www directory to app bundle..."
+          cp -R "${SRCROOT}/KitchenForge/www" "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/www"
+          echo "www directory contents:"
+          ls -la "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/www/"
+        name: Copy Web Assets
+        basedOnDependencyAnalysis: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.kitchenforge.app

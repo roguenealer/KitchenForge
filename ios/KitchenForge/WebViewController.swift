@@ -57,22 +57,51 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         view.addSubview(webView)
     }
 
+    private var hasLoadedSuccessfully = false
+
     private func loadApp() {
-        // Try loading from www subdirectory first (folder reference)
+        // Method 1: Try www subdirectory (postCompileScript copy)
         if let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "www") {
             let directory = url.deletingLastPathComponent()
             webView.loadFileURL(url, allowingReadAccessTo: directory)
             return
         }
 
-        // Fallback: try loading from bundle root (group reference)
+        // Method 2: Try bundle root (group reference)
         if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
             let directory = Bundle.main.bundleURL
             webView.loadFileURL(url, allowingReadAccessTo: directory)
             return
         }
 
-        showError("Could not find app files. Please reinstall the app.")
+        // Method 3: Try direct file path construction
+        let bundlePath = Bundle.main.bundlePath
+        let possiblePaths = [
+            "\(bundlePath)/www/index.html",
+            "\(bundlePath)/index.html",
+            "\(bundlePath)/KitchenForge/www/index.html"
+        ]
+
+        for path in possiblePaths {
+            let fileURL = URL(fileURLWithPath: path)
+            if FileManager.default.fileExists(atPath: path) {
+                let directory = fileURL.deletingLastPathComponent()
+                webView.loadFileURL(fileURL, allowingReadAccessTo: directory)
+                return
+            }
+        }
+
+        // If all methods fail, show the web app inline as a last resort
+        loadEmbeddedFallback()
+    }
+
+    private func loadEmbeddedFallback() {
+        // As a last resort, redirect to the hosted web version
+        if let url = URL(string: "https://kitchenforge-app.netlify.app") {
+            webView.load(URLRequest(url: url))
+            return
+        }
+        showError("Could not load app. Please check your internet connection.")
     }
 
     private func showError(_ message: String) {
@@ -88,14 +117,20 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
     // MARK: - WKNavigationDelegate
 
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        hasLoadedSuccessfully = true
+    }
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        // Retry loading on navigation failure
-        loadApp()
+        if !hasLoadedSuccessfully {
+            loadEmbeddedFallback()
+        }
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        // Retry loading on provisional navigation failure
-        loadApp()
+        if !hasLoadedSuccessfully {
+            loadEmbeddedFallback()
+        }
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
