@@ -6,7 +6,7 @@
 <title>KitchenForge</title>
 <meta name="theme-color" content="#2E7D32">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -62,7 +62,7 @@ input, select { font-family:inherit; }
 /* ─── TOP BAR ─── */
 .top-bar {
   display:flex; align-items:center; justify-content:space-between;
-  padding:calc(env(safe-area-inset-top, 0px) + 16px) 20px 8px; position:sticky; top:0; z-index:10;
+  padding:16px 20px 8px; padding-top: calc(env(safe-area-inset-top, 0px) + 16px); position:sticky; top:0; z-index:10;
   background:var(--bg);
 }
 .top-bar .logo { display:flex; align-items:center; gap:10px; }
@@ -83,7 +83,7 @@ input, select { font-family:inherit; }
 
 /* ─── SCREEN HEADER ─── */
 .screen-header {
-  padding:16px 20px 8px; position:sticky; top:0; z-index:10;
+  padding:16px 20px 8px; padding-top: calc(env(safe-area-inset-top, 0px) + 16px); position:sticky; top:0; z-index:10;
   background:var(--bg); display:flex; align-items:center; justify-content:space-between;
 }
 .screen-header h1 { font-size:26px; font-weight:800; }
@@ -749,7 +749,7 @@ body.dark {
     <h2>Good to see you!</h2>
     <div class="stats-row">
       <div class="stat">
-        <div class="num" id="total-items">47</div>
+        <div class="num" id="total-items">0</div>
         <div class="label">items in pantry</div>
       </div>
       <div class="stat">
@@ -757,7 +757,7 @@ body.dark {
         <div class="label">expiring soon</div>
       </div>
       <div class="stat">
-        <div class="num" id="recipe-count">10</div>
+        <div class="num" id="recipe-count">0</div>
         <div class="label">recipes ready</div>
       </div>
     </div>
@@ -817,9 +817,9 @@ body.dark {
 <!-- ════════════════════ PANTRY SCREEN ════════════════════ -->
 <section id="screen-pantry" class="screen">
   <div class="screen-header">
-    <h1>My Pantry</h1>
+    <h1>Food Inventory</h1>
     <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:14px;color:var(--text-secondary);" id="pantry-count">47 items</span>
+      <span style="font-size:14px;color:var(--text-secondary);" id="pantry-count">0 items</span>
       <button class="clear-all-btn" onclick="clearAllPantry()">&#x1F5D1;&#xFE0F; Clear All</button>
     </div>
   </div>
@@ -850,7 +850,7 @@ body.dark {
   </div>
   <div class="search-bar" style="margin:4px 20px 8px;">
     <span class="icon">&#x1F50D;</span>
-    <input type="text" placeholder="Search recipes online..." id="recipe-search" oninput="debounceRecipeSearch()">
+    <input type="text" placeholder="Search recipes (e.g. Whole 30, Keto, Chicken...)" id="recipe-search" oninput="debounceRecipeSearch()">
   </div>
   <div class="toggle-row">
     <div class="toggle on" id="match-toggle" onclick="toggleMatch()">
@@ -1037,35 +1037,28 @@ body.dark {
 
     <div class="setting-group">
       <div class="setting-group-title">Data</div>
-      <div class="setting-item" onclick="showToast('Pantry exported!')">
+      <div class="setting-item" onclick="exportPantryData()">
         <div class="left">
           <span class="icon">&#x1F4E4;</span>
-          <span class="label">Export pantry</span>
+          <span class="label">Export data</span>
         </div>
         <div class="right"><span class="chevron">&#x203A;</span></div>
-      </div>
-      <div class="setting-item" onclick="showToast('Shopping list cleared')">
-        <div class="left">
-          <span class="icon">&#x1F6D2;</span>
-          <span class="label">Shopping list</span>
-        </div>
-        <div class="right">3 items <span class="chevron">&#x203A;</span></div>
       </div>
     </div>
 
     <div class="setting-group">
       <div class="setting-group-title">Account</div>
-      <div class="setting-item" style="color:var(--danger);" onclick="showToast('Account deletion requires confirmation')">
+      <div class="setting-item" style="color:var(--danger);" onclick="deleteAccountConfirm()">
         <div class="left">
           <span class="icon">&#x1F5D1;&#xFE0F;</span>
-          <span class="label" style="color:var(--danger);">Delete account</span>
+          <span class="label" style="color:var(--danger);">Reset all data</span>
         </div>
         <div class="right"><span class="chevron">&#x203A;</span></div>
       </div>
     </div>
 
     <div style="text-align:center;padding:20px;font-size:12px;color:var(--text-light);">
-      KitchenForge v1.0.0<br>Made with &#x2764;&#xFE0F; for zero food waste
+      KitchenForge v1.2.0<br>Made with &#x2764;&#xFE0F; for zero food waste
     </div>
   </div>
 </section>
@@ -1144,10 +1137,10 @@ body.dark {
 <!-- CAT GREETING -->
 <div id="cat-greeting" class="hidden">
   <div class="cat-card">
-    <div class="cat-emoji">&#x1F431;</div>
-    <div class="cat-hi">Hi there!</div>
+    <div class="cat-emoji">&#x1F468;&#x200D;&#x1F373;</div>
+    <div class="cat-hi">Welcome back, Chef!</div>
     <div class="cat-fact" id="cat-fact-text"></div>
-    <button class="cat-dismiss" onclick="dismissCatGreeting()">Thanks, kitty!</button>
+    <button class="cat-dismiss" onclick="dismissCatGreeting()">Let's cook!</button>
   </div>
 </div>
 
@@ -1165,23 +1158,24 @@ body.dark {
   </button>
   <button class="nav-btn" onclick="navigateTo('pantry')" data-screen="pantry">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-    <span class="label">Pantry</span>
+    <span class="label">Inventory</span>
   </button>
   <button class="nav-btn" onclick="navigateTo('recipes')" data-screen="recipes">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
     <span class="label">Recipes</span>
   </button>
   <button class="nav-btn" onclick="navigateTo('settings')" data-screen="settings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-    <span class="label">Profile</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+    <span class="label">Settings</span>
   </button>
 </nav>
 
 <script>
 // ═══════════════════════════════════════════════════
-//  MOCK DATA
+//  DATA (localStorage-backed)
 // ═══════════════════════════════════════════════════
-const pantryItems = [
+const pantryItems = JSON.parse(localStorage.getItem('kf_pantry') || '[]');
+const _samplePantryItems = [
   {id:1,name:"Milk",emoji:"\u{1F95B}",qty:2,unit:"L",cat:"dairy",expDays:2,cost:3.49,addedDate:"2026-02-22"},
   {id:2,name:"Eggs",emoji:"\u{1F95A}",qty:12,unit:"pcs",cat:"dairy",expDays:5,cost:4.29,addedDate:"2026-02-22"},
   {id:3,name:"Chicken Breast",emoji:"\u{1F357}",qty:500,unit:"g",cat:"meat",expDays:1,cost:7.99,addedDate:"2026-02-23"},
@@ -1232,15 +1226,40 @@ const pantryItems = [
 ];
 
 // Spending log tracks all purchases for daily/weekly/monthly breakdown
-const spendingLog = [
-  {date:"2026-02-23",items:["Chicken Breast","Ground Beef","Salmon","Shrimp","Avocado","Bread"],total:52.94},
-  {date:"2026-02-22",items:["Milk","Eggs","Spinach","Tomatoes","Cheese","Bell Peppers","Yogurt","Bacon","Broccoli","Cilantro","Pork Chops","Cream","Sour Cream"],total:56.16},
-  {date:"2026-02-20",items:["Carrots","Butter","Lemons"],total:6.97},
-  {date:"2026-02-18",items:["Onions","Garlic","Ginger","Potatoes","Parmesan","Ice Cream","Frozen Pizza"],total:22.04},
-  {date:"2026-02-15",items:["Rice","Pasta","Canned Tomatoes","Coconut Milk","Chicken Broth","Frozen Peas","Frozen Corn","Frozen Berries","Fish Sticks"],total:28.40},
-  {date:"2026-02-10",items:["Olive Oil","Soy Sauce","Flour","Sugar","Black Pepper","Cumin","Paprika"],total:26.73},
-  {date:"2026-02-01",items:["Salt","Honey"],total:8.28},
-];
+const spendingLog = JSON.parse(localStorage.getItem('kf_spending') || '[]');
+
+// Load sample data on first visit
+if (pantryItems.length === 0 && !localStorage.getItem('kf_pantry')) {
+  _samplePantryItems.forEach(item => pantryItems.push(Object.assign({}, item)));
+}
+
+// Recalculate expDays based on addedDate so expiry counts down over time
+function recalcExpiry() {
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  pantryItems.forEach(item => {
+    if (item.addedDate && item._origExpDays !== undefined) {
+      const added = new Date(item.addedDate);
+      added.setHours(0,0,0,0);
+      const expDate = new Date(added.getTime() + item._origExpDays * 86400000);
+      item.expDays = Math.ceil((expDate - now) / 86400000);
+    } else if (item.addedDate && item.expDays !== undefined) {
+      // First time: store original shelf life, then compute remaining
+      item._origExpDays = item.expDays;
+      const added = new Date(item.addedDate);
+      added.setHours(0,0,0,0);
+      const expDate = new Date(added.getTime() + item._origExpDays * 86400000);
+      item.expDays = Math.ceil((expDate - now) / 86400000);
+    }
+  });
+}
+recalcExpiry();
+
+// Save data to localStorage whenever it changes
+function savePantryData() {
+  localStorage.setItem('kf_pantry', JSON.stringify(pantryItems));
+  localStorage.setItem('kf_spending', JSON.stringify(spendingLog));
+}
 
 const recipes = [
   {
@@ -1480,6 +1499,395 @@ const recipes = [
       "Serve hot with steamed rice on the side."
     ],
     source:"eatingwell.com"
+  },
+  {
+    id:11, title:"Whole30 Lemon Herb Chicken", cuisine:"mediterranean", time:30, servings:4,
+    emoji:"\u{1F357}", grad:"grad-1", tags:["whole30","paleo","gluten-free","dairy-free","healthy"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"4 pcs",have:true},{name:"Lemons",amount:"2",have:true},
+      {name:"Olive Oil",amount:"3 tbsp",have:true},{name:"Garlic",amount:"4 cloves",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"1 tsp",have:true},
+      {name:"Fresh Rosemary",amount:"2 sprigs",have:false},{name:"Fresh Thyme",amount:"4 sprigs",have:false}
+    ],
+    steps:["Preheat oven to 220\u00B0C (425\u00B0F).","Mix olive oil, lemon juice and zest, minced garlic, salt, pepper, and chopped herbs.","Place chicken breasts in a baking dish and pour marinade over them.","Roast for 22-25 minutes until internal temp reaches 74\u00B0C (165\u00B0F).","Let rest 5 minutes before slicing.","Squeeze fresh lemon over chicken and serve with roasted vegetables."],
+    nutrition:{cal:280,protein:"42g",carbs:"4g",fat:"11g"}, source:"whole30.com"
+  },
+  {
+    id:12, title:"Zucchini Noodle Bolognese", cuisine:"italian", time:25, servings:4,
+    emoji:"\u{1F35D}", grad:"grad-2", tags:["whole30","paleo","keto","gluten-free","low-carb","healthy"],
+    ingredients:[
+      {name:"Ground Beef",amount:"500g",have:true},{name:"Canned Tomatoes",amount:"1 can",have:true},
+      {name:"Onions",amount:"1",have:true},{name:"Garlic",amount:"3 cloves",have:true},
+      {name:"Carrots",amount:"1 diced",have:true},{name:"Olive Oil",amount:"2 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Zucchini",amount:"4 large",have:false},{name:"Italian Seasoning",amount:"1 tbsp",have:false}
+    ],
+    steps:["Spiralize zucchini into noodles and set aside on paper towels.","Heat olive oil in a large pan over medium-high heat.","Cook ground beef, breaking apart, until browned. Drain excess fat.","Add diced onions, carrots, and garlic. Cook 4-5 minutes.","Pour in canned tomatoes and Italian seasoning. Simmer 10 minutes.","Lightly saut\u00E9 zucchini noodles in a separate pan for 2 minutes.","Serve meat sauce over zucchini noodles."],
+    nutrition:{cal:310,protein:"28g",carbs:"14g",fat:"16g"}, source:"paleorunningmomma.com"
+  },
+  {
+    id:13, title:"Sheet Pan Salmon & Sweet Potatoes", cuisine:"mediterranean", time:30, servings:2,
+    emoji:"\u{1F41F}", grad:"grad-3", tags:["whole30","paleo","gluten-free","dairy-free","healthy"],
+    ingredients:[
+      {name:"Salmon",amount:"2 fillets",have:true},{name:"Olive Oil",amount:"3 tbsp",have:true},
+      {name:"Garlic",amount:"2 cloves",have:true},{name:"Lemons",amount:"1",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Paprika",amount:"1 tsp",have:true},
+      {name:"Sweet Potatoes",amount:"2 medium",have:false},{name:"Brussels Sprouts",amount:"2 cups",have:false}
+    ],
+    steps:["Preheat oven to 200\u00B0C (400\u00B0F). Line a sheet pan with parchment.","Cube sweet potatoes and halve Brussels sprouts. Toss with olive oil, salt, and paprika.","Spread vegetables on pan and roast for 15 minutes.","Season salmon with salt, pepper, garlic, and lemon juice.","Push vegetables to sides, place salmon in center of pan.","Roast another 12-15 minutes until salmon flakes easily.","Squeeze fresh lemon over everything and serve."],
+    nutrition:{cal:420,protein:"36g",carbs:"30g",fat:"18g"}, source:"wellplated.com"
+  },
+  {
+    id:14, title:"Cauliflower Fried Rice", cuisine:"asian", time:20, servings:4,
+    emoji:"\u{1F35A}", grad:"grad-4", tags:["whole30","paleo","keto","gluten-free","low-carb","healthy"],
+    ingredients:[
+      {name:"Eggs",amount:"3",have:true},{name:"Carrots",amount:"2 diced",have:true},
+      {name:"Frozen Peas",amount:"1/2 cup",have:true},{name:"Soy Sauce",amount:"2 tbsp",have:true},
+      {name:"Garlic",amount:"3 cloves",have:true},{name:"Ginger",amount:"1 tsp",have:true},
+      {name:"Olive Oil",amount:"2 tbsp",have:true},{name:"Onions",amount:"1 small",have:true},
+      {name:"Cauliflower",amount:"1 large head",have:false},{name:"Sesame Oil",amount:"1 tsp",have:false}
+    ],
+    steps:["Pulse cauliflower florets in food processor until rice-sized.","Heat oil in large wok over high heat.","Scramble eggs, break into small pieces, and set aside.","Saut\u00E9 diced onions, carrots, garlic, and ginger for 3 minutes.","Add cauliflower rice and stir-fry 5-6 minutes until slightly golden.","Add peas, soy sauce (or coconut aminos for Whole30), and eggs.","Toss everything together and drizzle with sesame oil. Serve hot."],
+    nutrition:{cal:180,protein:"12g",carbs:"16g",fat:"9g"}, source:"nomnompaleo.com"
+  },
+  {
+    id:15, title:"Whole30 Stuffed Peppers", cuisine:"mexican", time:40, servings:4,
+    emoji:"\u{1FAD1}", grad:"grad-5", tags:["whole30","paleo","gluten-free","dairy-free","healthy"],
+    ingredients:[
+      {name:"Bell Peppers",amount:"4 large",have:true},{name:"Ground Beef",amount:"500g",have:true},
+      {name:"Onions",amount:"1",have:true},{name:"Garlic",amount:"3 cloves",have:true},
+      {name:"Canned Tomatoes",amount:"1 can",have:true},{name:"Cumin",amount:"1 tsp",have:true},
+      {name:"Paprika",amount:"1 tsp",have:true},{name:"Olive Oil",amount:"1 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Cilantro",amount:"garnish",have:true}
+    ],
+    steps:["Preheat oven to 190\u00B0C (375\u00B0F).","Cut tops off bell peppers and remove seeds. Place in baking dish.","Brown ground beef in a pan, drain excess fat.","Add diced onions and garlic, cook 3 minutes.","Stir in canned tomatoes, cumin, paprika, and salt. Simmer 5 minutes.","Stuff each pepper with the meat mixture.","Cover with foil and bake 25-30 minutes. Garnish with cilantro."],
+    nutrition:{cal:340,protein:"30g",carbs:"18g",fat:"16g"}, source:"whole30.com"
+  },
+  {
+    id:16, title:"Bacon-Wrapped Chicken", cuisine:"american", time:35, servings:4,
+    emoji:"\u{1F953}", grad:"grad-6", tags:["keto","paleo","gluten-free","low-carb","high-protein"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"4 pcs",have:true},{name:"Bacon",amount:"8 slices",have:true},
+      {name:"Garlic",amount:"2 cloves",have:true},{name:"Olive Oil",amount:"1 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"1 tsp",have:true},
+      {name:"Paprika",amount:"1 tsp",have:true},{name:"Honey",amount:"1 tbsp",have:true}
+    ],
+    steps:["Preheat oven to 200\u00B0C (400\u00B0F).","Season chicken with garlic, salt, pepper, and paprika.","Wrap each chicken piece with 2 slices of bacon.","Place seam-side down on a lined baking sheet.","Brush lightly with honey.","Bake 25-30 minutes until bacon is crispy and chicken is cooked.","Let rest 5 minutes. Pair with a side salad or roasted vegetables."],
+    nutrition:{cal:380,protein:"44g",carbs:"4g",fat:"22g"}, source:"dietdoctor.com"
+  },
+  {
+    id:17, title:"Garlic Butter Shrimp", cuisine:"italian", time:15, servings:2,
+    emoji:"\u{1F990}", grad:"grad-7", tags:["keto","gluten-free","low-carb","quick","seafood"],
+    ingredients:[
+      {name:"Shrimp",amount:"300g",have:true},{name:"Butter",amount:"3 tbsp",have:true},
+      {name:"Garlic",amount:"5 cloves",have:true},{name:"Lemons",amount:"1",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Red Pepper Flakes",amount:"pinch",have:false},{name:"Fresh Parsley",amount:"2 tbsp",have:false}
+    ],
+    steps:["Pat shrimp dry and season with salt and pepper.","Melt butter in a large skillet over medium-high heat.","Add minced garlic and cook 30 seconds until fragrant.","Add shrimp in single layer. Cook 2 minutes per side until pink.","Squeeze lemon juice over shrimp. Add red pepper flakes.","Toss to coat in garlic butter.","Garnish with parsley. Great over cauliflower rice or zucchini noodles."],
+    nutrition:{cal:260,protein:"28g",carbs:"3g",fat:"16g"}, source:"cafedelites.com"
+  },
+  {
+    id:18, title:"Avocado Baked Eggs", cuisine:"breakfast", time:20, servings:2,
+    emoji:"\u{1F951}", grad:"grad-8", tags:["keto","whole30","paleo","gluten-free","breakfast","healthy"],
+    ingredients:[
+      {name:"Avocado",amount:"2 large",have:true},{name:"Eggs",amount:"4 small",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Bacon",amount:"2 slices crumbled",have:true},{name:"Cilantro",amount:"garnish",have:true},
+      {name:"Hot Sauce",amount:"to taste",have:false}
+    ],
+    steps:["Preheat oven to 220\u00B0C (425\u00B0F).","Halve avocados and remove pits. Scoop out a bit of flesh to widen the hole.","Place avocado halves in a muffin tin to keep them stable.","Crack one egg into each avocado half. Season with salt and pepper.","Bake 15-18 minutes until egg whites are set but yolks are still soft.","Top with crumbled bacon, cilantro, and hot sauce. Serve immediately."],
+    nutrition:{cal:320,protein:"16g",carbs:"8g",fat:"26g"}, source:"skinnytaste.com"
+  },
+  {
+    id:19, title:"Greek Chicken Bowl", cuisine:"mediterranean", time:25, servings:4,
+    emoji:"\u{1F957}", grad:"grad-9", tags:["healthy","mediterranean","high-protein","meal-prep"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"500g",have:true},{name:"Rice",amount:"2 cups",have:true},
+      {name:"Tomatoes",amount:"2 diced",have:true},{name:"Olive Oil",amount:"3 tbsp",have:true},
+      {name:"Lemons",amount:"1",have:true},{name:"Garlic",amount:"2 cloves",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Cucumber",amount:"1 diced",have:false},
+      {name:"Kalamata Olives",amount:"1/4 cup",have:false},{name:"Feta Cheese",amount:"100g",have:false}
+    ],
+    steps:["Cook rice according to package directions.","Season chicken with garlic, lemon juice, salt, and olive oil.","Grill or pan-sear chicken 6-7 minutes per side. Let rest and slice.","Make quick salad: combine diced tomatoes, cucumber, olives, and feta.","Dress salad with olive oil and lemon juice.","Assemble bowls: rice on bottom, sliced chicken on top, Greek salad alongside.","Drizzle with olive oil and serve with lemon wedges."],
+    nutrition:{cal:450,protein:"38g",carbs:"42g",fat:"14g"}, source:"cookieandkate.com"
+  },
+  {
+    id:20, title:"Shakshuka", cuisine:"mediterranean", time:25, servings:4,
+    emoji:"\u{1F373}", grad:"grad-10", tags:["vegetarian","healthy","breakfast","mediterranean","gluten-free"],
+    ingredients:[
+      {name:"Eggs",amount:"6",have:true},{name:"Canned Tomatoes",amount:"2 cans",have:true},
+      {name:"Onions",amount:"1 large",have:true},{name:"Bell Peppers",amount:"1",have:true},
+      {name:"Garlic",amount:"3 cloves",have:true},{name:"Cumin",amount:"1 tsp",have:true},
+      {name:"Paprika",amount:"2 tsp",have:true},{name:"Olive Oil",amount:"2 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Cilantro",amount:"garnish",have:true},
+      {name:"Bread",amount:"for serving",have:true}
+    ],
+    steps:["Heat olive oil in a large deep skillet over medium heat.","Saut\u00E9 diced onions and bell peppers for 5 minutes until softened.","Add garlic, cumin, and paprika. Cook 1 minute.","Pour in canned tomatoes and simmer 10 minutes until thickened.","Make 6 wells in the sauce. Crack an egg into each well.","Cover and cook 5-8 minutes until egg whites are set but yolks are runny.","Garnish with cilantro. Serve with crusty bread for dipping."],
+    nutrition:{cal:280,protein:"18g",carbs:"20g",fat:"14g"}, source:"bonappetit.com"
+  },
+  {
+    id:21, title:"One-Pan Honey Garlic Chicken", cuisine:"asian", time:25, servings:4,
+    emoji:"\u{1F357}", grad:"grad-1", tags:["quick","easy","family-friendly"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"4 pcs",have:true},{name:"Honey",amount:"3 tbsp",have:true},
+      {name:"Soy Sauce",amount:"3 tbsp",have:true},{name:"Garlic",amount:"4 cloves",have:true},
+      {name:"Butter",amount:"2 tbsp",have:true},{name:"Olive Oil",amount:"1 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Broccoli",amount:"2 cups",have:true},
+      {name:"Rice",amount:"for serving",have:true}
+    ],
+    steps:["Mix honey, soy sauce, and minced garlic in a small bowl.","Season chicken with salt and pepper.","Heat olive oil and butter in a large skillet over medium-high heat.","Sear chicken 5-6 minutes per side until golden.","Add broccoli florets around the chicken.","Pour honey garlic sauce over everything.","Cover and cook 5 minutes until chicken is done and broccoli is tender. Serve over rice."],
+    nutrition:{cal:380,protein:"36g",carbs:"28g",fat:"14g"}, source:"damndelicious.net"
+  },
+  {
+    id:22, title:"Quick Beef & Broccoli", cuisine:"asian", time:20, servings:4,
+    emoji:"\u{1F969}", grad:"grad-2", tags:["quick","asian","family-friendly"],
+    ingredients:[
+      {name:"Ground Beef",amount:"500g",have:true},{name:"Broccoli",amount:"1 large head",have:true},
+      {name:"Soy Sauce",amount:"3 tbsp",have:true},{name:"Garlic",amount:"3 cloves",have:true},
+      {name:"Ginger",amount:"1 tbsp",have:true},{name:"Honey",amount:"1 tbsp",have:true},
+      {name:"Olive Oil",amount:"2 tbsp",have:true},{name:"Rice",amount:"for serving",have:true},
+      {name:"Cornstarch",amount:"1 tbsp",have:false},{name:"Sesame Seeds",amount:"garnish",have:false}
+    ],
+    steps:["Mix soy sauce, honey, and cornstarch in a small bowl.","Heat oil in wok over high heat.","Brown beef, breaking into pieces, for 4-5 minutes. Remove.","Add broccoli florets and stir-fry 3 minutes.","Add garlic and ginger, cook 30 seconds.","Return beef to wok. Pour sauce over and toss until thickened.","Serve over steamed rice with sesame seeds."],
+    nutrition:{cal:400,protein:"32g",carbs:"24g",fat:"20g"}, source:"recipetineats.com"
+  },
+  {
+    id:23, title:"Sheet Pan Chicken Fajitas", cuisine:"mexican", time:25, servings:4,
+    emoji:"\u{1F32E}", grad:"grad-3", tags:["quick","mexican","family-friendly","gluten-free","whole30"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"500g sliced",have:true},{name:"Bell Peppers",amount:"3",have:true},
+      {name:"Onions",amount:"2 sliced",have:true},{name:"Olive Oil",amount:"3 tbsp",have:true},
+      {name:"Cumin",amount:"1 tsp",have:true},{name:"Paprika",amount:"1 tsp",have:true},
+      {name:"Garlic",amount:"2 cloves",have:true},{name:"Salt",amount:"to taste",have:true},
+      {name:"Sour Cream",amount:"for serving",have:true},{name:"Tortillas",amount:"8",have:false}
+    ],
+    steps:["Preheat oven to 220\u00B0C (425\u00B0F).","Slice chicken, peppers, and onions into strips.","Toss everything with olive oil, cumin, paprika, garlic, and salt.","Spread in single layer on a large sheet pan.","Roast 20-22 minutes, tossing halfway, until chicken is cooked.","Warm tortillas and serve with sour cream.","For Whole30: skip tortillas and serve in lettuce wraps."],
+    nutrition:{cal:340,protein:"34g",carbs:"22g",fat:"14g"}, source:"budgetbytes.com"
+  },
+  {
+    id:24, title:"Creamy Tomato Soup", cuisine:"italian", time:30, servings:4,
+    emoji:"\u{1F372}", grad:"grad-4", tags:["comfort","vegetarian","soup","family-friendly"],
+    ingredients:[
+      {name:"Canned Tomatoes",amount:"2 cans",have:true},{name:"Onions",amount:"1 large",have:true},
+      {name:"Garlic",amount:"3 cloves",have:true},{name:"Butter",amount:"2 tbsp",have:true},
+      {name:"Cream",amount:"1/2 cup",have:true},{name:"Chicken Broth",amount:"2 cups",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Bread",amount:"for serving",have:true},{name:"Fresh Basil",amount:"handful",have:false}
+    ],
+    steps:["Melt butter in a large pot over medium heat.","Saut\u00E9 diced onions for 5 minutes until soft.","Add garlic and cook 1 minute.","Pour in canned tomatoes and chicken broth. Bring to a boil.","Reduce heat and simmer 15 minutes.","Blend until smooth with an immersion blender.","Stir in cream. Season with salt and pepper. Serve with crusty bread."],
+    nutrition:{cal:220,protein:"6g",carbs:"20g",fat:"14g"}, source:"foodnetwork.com"
+  },
+  {
+    id:25, title:"Classic Beef Stew", cuisine:"american", time:60, servings:6,
+    emoji:"\u{1F372}", grad:"grad-5", tags:["comfort","hearty","winter","family-friendly"],
+    ingredients:[
+      {name:"Ground Beef",amount:"600g cubed",have:true},{name:"Potatoes",amount:"4 cubed",have:true},
+      {name:"Carrots",amount:"3 sliced",have:true},{name:"Onions",amount:"2 diced",have:true},
+      {name:"Garlic",amount:"3 cloves",have:true},{name:"Canned Tomatoes",amount:"1 can",have:true},
+      {name:"Chicken Broth",amount:"3 cups",have:true},{name:"Olive Oil",amount:"2 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Frozen Peas",amount:"1 cup",have:true},
+      {name:"Flour",amount:"2 tbsp",have:true}
+    ],
+    steps:["Cut beef into cubes. Season with salt, pepper, and dust with flour.","Heat olive oil in a Dutch oven. Brown beef in batches. Set aside.","Saut\u00E9 onions and garlic in the same pot for 3 minutes.","Add carrots and potatoes. Cook 2 minutes.","Return beef. Add canned tomatoes and broth.","Bring to a boil, then simmer covered 40-45 minutes until tender.","Add frozen peas in the last 5 minutes. Season and serve."],
+    nutrition:{cal:380,protein:"32g",carbs:"34g",fat:"14g"}, source:"allrecipes.com"
+  },
+  {
+    id:26, title:"Baked Mac & Cheese", cuisine:"american", time:35, servings:6,
+    emoji:"\u{1F9C0}", grad:"grad-6", tags:["comfort","family-friendly","vegetarian"],
+    ingredients:[
+      {name:"Pasta",amount:"400g elbow",have:true},{name:"Cheese",amount:"300g shredded",have:true},
+      {name:"Butter",amount:"3 tbsp",have:true},{name:"Flour",amount:"3 tbsp",have:true},
+      {name:"Milk",amount:"2.5 cups",have:true},{name:"Salt",amount:"to taste",have:true},
+      {name:"Black Pepper",amount:"1/2 tsp",have:true},{name:"Parmesan",amount:"50g",have:true},
+      {name:"Bread Crumbs",amount:"1/2 cup",have:false}
+    ],
+    steps:["Preheat oven to 190\u00B0C (375\u00B0F). Cook pasta until al dente.","Melt butter in a pot. Whisk in flour and cook 1 minute.","Gradually whisk in milk. Cook until thick, about 5 minutes.","Remove from heat. Stir in cheese until melted and smooth.","Combine sauce with pasta. Pour into a baking dish.","Top with remaining cheese, Parmesan, and bread crumbs.","Bake 20 minutes until golden and bubbly."],
+    nutrition:{cal:520,protein:"22g",carbs:"52g",fat:"24g"}, source:"seriouseats.com"
+  },
+  {
+    id:27, title:"Buddha Bowl", cuisine:"mediterranean", time:25, servings:2,
+    emoji:"\u{1F957}", grad:"grad-7", tags:["healthy","vegetarian","vegan","meal-prep"],
+    ingredients:[
+      {name:"Rice",amount:"1 cup cooked",have:true},{name:"Avocado",amount:"1",have:true},
+      {name:"Carrots",amount:"1 shredded",have:true},{name:"Spinach",amount:"2 cups",have:true},
+      {name:"Olive Oil",amount:"2 tbsp",have:true},{name:"Lemons",amount:"1",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Chickpeas",amount:"1 can",have:false},
+      {name:"Tahini",amount:"2 tbsp",have:false}
+    ],
+    steps:["Cook rice according to package directions.","Drain and rinse chickpeas. Toss with olive oil and roast at 200\u00B0C for 15 min.","Slice avocado, shred carrots, wash spinach.","Make tahini dressing: mix tahini, lemon juice, water, and salt.","Assemble bowls: rice base, topped with spinach, carrots, avocado, chickpeas.","Drizzle generously with tahini dressing. Serve immediately."],
+    nutrition:{cal:420,protein:"14g",carbs:"48g",fat:"20g"}, source:"minimalistbaker.com"
+  },
+  {
+    id:28, title:"Chicken Burrito Bowl", cuisine:"mexican", time:25, servings:4,
+    emoji:"\u{1F32F}", grad:"grad-8", tags:["mexican","healthy","meal-prep","family-friendly"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"500g",have:true},{name:"Rice",amount:"2 cups",have:true},
+      {name:"Onions",amount:"1",have:true},{name:"Garlic",amount:"2 cloves",have:true},
+      {name:"Cumin",amount:"1 tsp",have:true},{name:"Paprika",amount:"1 tsp",have:true},
+      {name:"Olive Oil",amount:"2 tbsp",have:true},{name:"Sour Cream",amount:"for topping",have:true},
+      {name:"Cheese",amount:"1/2 cup shredded",have:true},{name:"Frozen Corn",amount:"1 cup",have:true},
+      {name:"Black Beans",amount:"1 can",have:false},{name:"Lime",amount:"1",have:false}
+    ],
+    steps:["Cook rice according to package directions.","Season chicken with cumin, paprika, garlic, and salt.","Grill or pan-sear chicken 6-7 minutes per side. Rest and slice.","Warm black beans and corn in a small pot.","Assemble bowls: rice, beans, corn, sliced chicken.","Top with cheese, sour cream, and fresh salsa.","Squeeze lime over everything and serve."],
+    nutrition:{cal:480,protein:"38g",carbs:"50g",fat:"14g"}, source:"pinchofyum.com"
+  },
+  {
+    id:29, title:"Teriyaki Salmon Bowl", cuisine:"asian", time:25, servings:2,
+    emoji:"\u{1F363}", grad:"grad-9", tags:["asian","healthy","omega-3","quick"],
+    ingredients:[
+      {name:"Salmon",amount:"2 fillets",have:true},{name:"Rice",amount:"2 cups cooked",have:true},
+      {name:"Soy Sauce",amount:"3 tbsp",have:true},{name:"Honey",amount:"2 tbsp",have:true},
+      {name:"Garlic",amount:"2 cloves",have:true},{name:"Ginger",amount:"1 tsp",have:true},
+      {name:"Carrots",amount:"1 shredded",have:true},{name:"Avocado",amount:"1",have:true},
+      {name:"Sesame Seeds",amount:"garnish",have:false}
+    ],
+    steps:["Mix soy sauce, honey, garlic, and ginger for teriyaki sauce.","Cook rice according to package directions.","Pan-sear salmon skin-side down for 4 minutes.","Flip and pour half the teriyaki sauce over salmon. Cook 3 more minutes.","Assemble bowls: rice base, salmon on top.","Arrange sliced avocado and shredded carrots alongside.","Drizzle remaining teriyaki sauce and sprinkle sesame seeds."],
+    nutrition:{cal:480,protein:"36g",carbs:"44g",fat:"18g"}, source:"justonecookbook.com"
+  },
+  {
+    id:30, title:"Avocado Toast & Eggs", cuisine:"breakfast", time:10, servings:2,
+    emoji:"\u{1F35E}", grad:"grad-10", tags:["breakfast","quick","vegetarian","healthy"],
+    ingredients:[
+      {name:"Bread",amount:"4 slices",have:true},{name:"Avocado",amount:"2",have:true},
+      {name:"Eggs",amount:"4",have:true},{name:"Olive Oil",amount:"1 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Lemons",amount:"1/2",have:true},{name:"Red Pepper Flakes",amount:"pinch",have:false}
+    ],
+    steps:["Toast bread until golden and crispy.","Mash avocados with lemon juice, salt, and pepper.","Spread avocado mixture on each toast.","Fry or poach eggs to your liking.","Place eggs on top of avocado toast.","Season with salt, pepper, and red pepper flakes. Serve immediately."],
+    nutrition:{cal:380,protein:"16g",carbs:"28g",fat:"24g"}, source:"loveandlemons.com"
+  },
+  {
+    id:31, title:"Berry Smoothie Bowl", cuisine:"breakfast", time:10, servings:2,
+    emoji:"\u{1F353}", grad:"grad-1", tags:["breakfast","quick","healthy","vegetarian"],
+    ingredients:[
+      {name:"Frozen Berries",amount:"2 cups",have:true},{name:"Yogurt",amount:"1 cup",have:true},
+      {name:"Honey",amount:"1 tbsp",have:true},{name:"Banana",amount:"1 frozen",have:false},
+      {name:"Granola",amount:"1/4 cup",have:false},{name:"Chia Seeds",amount:"1 tbsp",have:false}
+    ],
+    steps:["Blend frozen berries, banana, yogurt, and honey until thick and smooth.","Pour into two bowls (thicker than a regular smoothie).","Top with granola, extra berries, and chia seeds.","Add any other toppings: sliced fruit, coconut, nuts.","Serve immediately and eat with a spoon."],
+    nutrition:{cal:280,protein:"8g",carbs:"48g",fat:"6g"}, source:"minimalistbaker.com"
+  },
+  {
+    id:32, title:"Banana Pancakes", cuisine:"breakfast", time:15, servings:2,
+    emoji:"\u{1F95E}", grad:"grad-2", tags:["breakfast","quick","family-friendly","vegetarian"],
+    ingredients:[
+      {name:"Eggs",amount:"2",have:true},{name:"Flour",amount:"1 cup",have:true},
+      {name:"Milk",amount:"3/4 cup",have:true},{name:"Butter",amount:"2 tbsp",have:true},
+      {name:"Sugar",amount:"1 tbsp",have:true},{name:"Salt",amount:"pinch",have:true},
+      {name:"Honey",amount:"for serving",have:true},{name:"Banana",amount:"1 large",have:false},
+      {name:"Baking Powder",amount:"2 tsp",have:false}
+    ],
+    steps:["Mash banana in a large bowl.","Whisk in eggs, milk, melted butter, and sugar.","Add flour, baking powder, and salt. Mix until just combined.","Heat a non-stick pan over medium heat. Butter lightly.","Pour 1/4 cup batter per pancake. Cook until bubbles form.","Flip and cook 1-2 more minutes until golden.","Stack and serve with honey, butter, and fresh banana slices."],
+    nutrition:{cal:360,protein:"12g",carbs:"52g",fat:"12g"}, source:"allrecipes.com"
+  },
+  {
+    id:33, title:"Korean Beef Bowl", cuisine:"asian", time:20, servings:4,
+    emoji:"\u{1F35A}", grad:"grad-3", tags:["asian","quick","korean","family-friendly"],
+    ingredients:[
+      {name:"Ground Beef",amount:"500g",have:true},{name:"Rice",amount:"3 cups cooked",have:true},
+      {name:"Soy Sauce",amount:"4 tbsp",have:true},{name:"Honey",amount:"2 tbsp",have:true},
+      {name:"Garlic",amount:"3 cloves",have:true},{name:"Ginger",amount:"1 tsp",have:true},
+      {name:"Olive Oil",amount:"1 tbsp",have:true},{name:"Carrots",amount:"1 shredded",have:true},
+      {name:"Eggs",amount:"4 fried",have:true},{name:"Sesame Oil",amount:"1 tsp",have:false},
+      {name:"Green Onions",amount:"garnish",have:false}
+    ],
+    steps:["Mix soy sauce, honey, garlic, ginger, and sesame oil for the sauce.","Brown ground beef in a skillet, breaking apart. Drain fat.","Pour sauce over beef. Simmer 3 minutes until slightly thickened.","Fry eggs sunny side up.","Assemble bowls: rice, Korean beef, shredded carrots.","Top each bowl with a fried egg.","Garnish with green onions and sriracha."],
+    nutrition:{cal:480,protein:"30g",carbs:"48g",fat:"18g"}, source:"therecipecritic.com"
+  },
+  {
+    id:34, title:"Butter Chicken", cuisine:"indian", time:35, servings:4,
+    emoji:"\u{1F35B}", grad:"grad-4", tags:["indian","comfort","family-friendly"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"500g cubed",have:true},{name:"Butter",amount:"3 tbsp",have:true},
+      {name:"Canned Tomatoes",amount:"1 can",have:true},{name:"Cream",amount:"1/2 cup",have:true},
+      {name:"Onions",amount:"1 large",have:true},{name:"Garlic",amount:"4 cloves",have:true},
+      {name:"Ginger",amount:"1 tbsp",have:true},{name:"Cumin",amount:"1 tsp",have:true},
+      {name:"Paprika",amount:"1 tsp",have:true},{name:"Salt",amount:"to taste",have:true},
+      {name:"Rice",amount:"for serving",have:true},{name:"Yogurt",amount:"1/2 cup",have:true},
+      {name:"Cilantro",amount:"garnish",have:true},{name:"Garam Masala",amount:"2 tsp",have:false}
+    ],
+    steps:["Marinate chicken in yogurt, cumin, paprika, and salt for 15 minutes.","Melt butter in a large pot. Cook chicken until golden. Remove.","Saut\u00E9 diced onions until golden, about 5 minutes.","Add garlic, ginger, and garam masala. Cook 1 minute.","Pour in canned tomatoes. Simmer 10 minutes.","Return chicken. Stir in cream. Simmer 10 minutes.","Serve over basmati rice, garnished with cilantro."],
+    nutrition:{cal:440,protein:"36g",carbs:"18g",fat:"26g"}, source:"indianhealthyrecipes.com"
+  },
+  {
+    id:35, title:"Fish Tacos", cuisine:"mexican", time:20, servings:4,
+    emoji:"\u{1F32E}", grad:"grad-5", tags:["mexican","quick","seafood","healthy"],
+    ingredients:[
+      {name:"Salmon",amount:"2 fillets",have:true},{name:"Olive Oil",amount:"2 tbsp",have:true},
+      {name:"Cumin",amount:"1 tsp",have:true},{name:"Paprika",amount:"1 tsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Sour Cream",amount:"for topping",have:true},
+      {name:"Cilantro",amount:"chopped",have:true},{name:"Lemons",amount:"1",have:true},
+      {name:"Tortillas",amount:"8 small",have:false},{name:"Cabbage",amount:"2 cups shredded",have:false}
+    ],
+    steps:["Season fish with cumin, paprika, salt, and olive oil.","Pan-sear or grill fish 3-4 minutes per side until flaky.","Shred cabbage and toss with lime juice and salt.","Make crema: mix sour cream with lime juice and salt.","Warm tortillas in a dry pan.","Break fish into chunks.","Assemble tacos: tortilla, cabbage slaw, fish, crema, cilantro."],
+    nutrition:{cal:320,protein:"28g",carbs:"24g",fat:"12g"}, source:"cookieandkate.com"
+  },
+  {
+    id:36, title:"Chicken Shawarma Bowl", cuisine:"mediterranean", time:30, servings:4,
+    emoji:"\u{1F356}", grad:"grad-6", tags:["mediterranean","healthy","high-protein","meal-prep"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"500g",have:true},{name:"Rice",amount:"2 cups",have:true},
+      {name:"Olive Oil",amount:"3 tbsp",have:true},{name:"Garlic",amount:"3 cloves",have:true},
+      {name:"Lemons",amount:"1",have:true},{name:"Cumin",amount:"2 tsp",have:true},
+      {name:"Paprika",amount:"1 tsp",have:true},{name:"Yogurt",amount:"1/2 cup",have:true},
+      {name:"Tomatoes",amount:"1 diced",have:true},{name:"Salt",amount:"to taste",have:true},
+      {name:"Turmeric",amount:"1 tsp",have:false},{name:"Pita Bread",amount:"4 pcs",have:false}
+    ],
+    steps:["Mix cumin, paprika, turmeric, garlic, lemon juice, olive oil, and salt.","Marinate sliced chicken in the spice mixture for 15 minutes.","Cook rice according to package directions.","Cook chicken in a hot skillet 5-6 minutes per side.","Make yogurt sauce: mix yogurt, lemon juice, garlic, and salt.","Assemble bowls: rice, sliced chicken, diced tomatoes.","Drizzle with yogurt sauce and serve with warm pita."],
+    nutrition:{cal:460,protein:"40g",carbs:"42g",fat:"14g"}, source:"recipetineats.com"
+  },
+  {
+    id:37, title:"Whole30 Sweet Potato Hash", cuisine:"breakfast", time:25, servings:4,
+    emoji:"\u{1F954}", grad:"grad-7", tags:["whole30","paleo","breakfast","gluten-free","dairy-free","healthy"],
+    ingredients:[
+      {name:"Eggs",amount:"4",have:true},{name:"Bacon",amount:"4 slices diced",have:true},
+      {name:"Onions",amount:"1 diced",have:true},{name:"Bell Peppers",amount:"1 diced",have:true},
+      {name:"Garlic",amount:"2 cloves",have:true},{name:"Olive Oil",amount:"1 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Paprika",amount:"1/2 tsp",have:true},
+      {name:"Sweet Potatoes",amount:"2 large diced",have:false}
+    ],
+    steps:["Dice sweet potatoes into small cubes.","Cook diced bacon until crispy. Remove bacon, keep fat.","Add sweet potatoes to the bacon fat. Cook 10-12 minutes.","Add diced onions, bell peppers, and garlic. Cook 3-4 minutes.","Season with salt, pepper, and paprika.","Make 4 wells in the hash. Crack an egg into each.","Cover and cook 4-5 minutes. Top with crispy bacon and serve."],
+    nutrition:{cal:360,protein:"20g",carbs:"28g",fat:"18g"}, source:"whole30.com"
+  },
+  {
+    id:38, title:"Whole30 Chicken Soup", cuisine:"american", time:35, servings:6,
+    emoji:"\u{1F372}", grad:"grad-8", tags:["whole30","paleo","gluten-free","dairy-free","soup","comfort","healthy"],
+    ingredients:[
+      {name:"Chicken Breast",amount:"500g",have:true},{name:"Carrots",amount:"3 sliced",have:true},
+      {name:"Onions",amount:"1 large diced",have:true},{name:"Garlic",amount:"3 cloves",have:true},
+      {name:"Chicken Broth",amount:"6 cups",have:true},{name:"Olive Oil",amount:"2 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Cilantro",amount:"garnish",have:true},{name:"Celery",amount:"3 stalks",have:false}
+    ],
+    steps:["Heat olive oil in a large pot over medium heat.","Saut\u00E9 onions, carrots, and celery for 5 minutes.","Add garlic and cook 30 seconds.","Pour in chicken broth. Add whole chicken breasts.","Bring to a boil, then simmer 20 minutes until chicken is cooked.","Remove chicken. Shred with two forks.","Return shredded chicken to pot. Season and serve with cilantro."],
+    nutrition:{cal:220,protein:"28g",carbs:"12g",fat:"8g"}, source:"whole30.com"
+  },
+  {
+    id:39, title:"Honey Glazed Pork Chops", cuisine:"american", time:25, servings:4,
+    emoji:"\u{1F356}", grad:"grad-9", tags:["quick","family-friendly","high-protein"],
+    ingredients:[
+      {name:"Pork Chops",amount:"4 pcs",have:true},{name:"Honey",amount:"2 tbsp",have:true},
+      {name:"Soy Sauce",amount:"2 tbsp",have:true},{name:"Garlic",amount:"3 cloves",have:true},
+      {name:"Butter",amount:"2 tbsp",have:true},{name:"Olive Oil",amount:"1 tbsp",have:true},
+      {name:"Salt",amount:"to taste",have:true},{name:"Black Pepper",amount:"to taste",have:true},
+      {name:"Potatoes",amount:"4 small",have:true}
+    ],
+    steps:["Season pork chops with salt and pepper.","Mix honey, soy sauce, and minced garlic for the glaze.","Heat olive oil in a large oven-safe skillet over high heat.","Sear pork chops 3 minutes per side until golden.","Add butter and baste the chops.","Pour glaze over chops. Add halved potatoes around them.","Transfer to 200\u00B0C oven for 10-12 minutes. Rest 5 minutes and serve."],
+    nutrition:{cal:420,protein:"36g",carbs:"28g",fat:"18g"}, source:"cafedelites.com"
+  },
+  {
+    id:40, title:"Whole30 Shrimp Stir Fry", cuisine:"asian", time:20, servings:4,
+    emoji:"\u{1F990}", grad:"grad-10", tags:["whole30","paleo","gluten-free","dairy-free","quick","healthy","asian"],
+    ingredients:[
+      {name:"Shrimp",amount:"400g",have:true},{name:"Broccoli",amount:"2 cups",have:true},
+      {name:"Bell Peppers",amount:"2 sliced",have:true},{name:"Carrots",amount:"2 sliced",have:true},
+      {name:"Garlic",amount:"3 cloves",have:true},{name:"Ginger",amount:"1 tbsp",have:true},
+      {name:"Olive Oil",amount:"2 tbsp",have:true},{name:"Salt",amount:"to taste",have:true},
+      {name:"Coconut Aminos",amount:"3 tbsp",have:false},{name:"Sesame Oil",amount:"1 tsp",have:false}
+    ],
+    steps:["Pat shrimp dry and season with salt.","Heat oil in a large wok over high heat.","Sear shrimp 1-2 minutes per side. Remove and set aside.","Add carrots and broccoli. Stir-fry 3 minutes.","Add bell peppers, garlic, and ginger. Cook 2 minutes.","Return shrimp. Add coconut aminos (Whole30 soy sauce alternative).","Toss together. Drizzle with sesame oil. Serve over cauliflower rice."],
+    nutrition:{cal:240,protein:"28g",carbs:"14g",fat:"10g"}, source:"nomnompaleo.com"
   }
 ];
 
@@ -1539,29 +1947,47 @@ function getShelfLife(itemName) {
 }
 
 // ═══════════════════════════════════════════════════
-//  CAT FACTS
+//  SMART CATEGORY DETECTION
 // ═══════════════════════════════════════════════════
-const catFacts = [
-  "Cats sleep 12-16 hours a day... talk about living the dream!",
-  "A group of cats is called a 'clowder'. Fancy, right?",
-  "Cats have over 20 different vocalizations!",
-  "The first cat in space was a French cat named Felicette!",
-  "Cats can rotate their ears 180 degrees!",
-  "A cat's nose print is unique, like a human fingerprint!",
-  "Cats spend 30-50% of their day grooming themselves!",
-  "Cats can jump up to 6 times their own length!",
-  "A cat has 230 bones \u2014 that's 24 more than a human!",
-  "Cats can't taste sweetness. More savory for them!",
-  "The average cat can run at 30 mph in short bursts!",
-  "A cat's purr vibrates at 25-150 Hz, which can help heal bones!",
-  "Cats dream just like humans \u2014 they enter REM sleep too!",
-  "Cats have 32 muscles in each ear!",
-  "A cat's brain is 90% similar to a human's!",
-  "Ancient Egyptians loved cats so much they shaved their eyebrows when one died!",
-  "Cats can make over 100 different sounds!",
-  "The world's oldest cat lived to be 38 years old!",
-  "A cat's whiskers are as wide as its body to help judge tight spaces!",
-  "Cats can see in light levels six times lower than humans need!",
+function detectCategory(name) {
+  const n = name.toLowerCase();
+  const dairyWords = ['milk','cheese','cheddar','mozzarella','parmesan','brie','gouda','feta','cream cheese','yogurt','yoghurt','butter','cream','sour cream','cottage cheese','ricotta','whey','ghee','custard'];
+  const meatWords = ['chicken','beef','pork','lamb','turkey','duck','veal','steak','bacon','sausage','ham','salami','pepperoni','ground beef','ground turkey','ribs','brisket','tenderloin','thigh','drumstick','wing','fish','salmon','tuna','shrimp','prawn','cod','tilapia','crab','lobster','clam','mussel','oyster','scallop','anchov','sardine','trout','halibut','mahi','catfish','squid','octopus','fillet'];
+  const frozenWords = ['frozen','ice cream','gelato','popsicle','fish stick','fish finger'];
+  const produceWords = ['apple','banana','orange','grape','strawberry','blueberry','raspberry','mango','pineapple','watermelon','melon','peach','pear','plum','cherry','kiwi','papaya','coconut','fig','pomegranate','lemon','lime','grapefruit','tangerine','avocado','tomato','lettuce','spinach','kale','arugula','cabbage','broccoli','cauliflower','carrot','celery','cucumber','zucchini','squash','eggplant','pepper','onion','garlic','ginger','potato','sweet potato','yam','corn','pea','bean','beet','radish','turnip','artichoke','asparagus','mushroom','cilantro','parsley','basil','mint','dill','thyme','rosemary','oregano','chive'];
+
+  if (frozenWords.some(w => n.includes(w))) return 'frozen';
+  if (dairyWords.some(w => n.includes(w))) return 'dairy';
+  if (meatWords.some(w => n.includes(w))) return 'meat';
+  if (produceWords.some(w => n.includes(w))) return 'produce';
+  // Default to pantry for items like flour, rice, oil, canned goods etc.
+  return 'pantry';
+}
+
+// ═══════════════════════════════════════════════════
+//  COOKING MOTIVATION
+// ═══════════════════════════════════════════════════
+const cookingMotivation = [
+  "What delicious creation will you make today?",
+  "Cooking at home saves money and tastes amazing!",
+  "A home-cooked meal is a gift to yourself and your loved ones.",
+  "The secret ingredient is always love (and maybe garlic).",
+  "Great chefs start with great ingredients. Let's see what you have!",
+  "Reducing food waste, one meal at a time!",
+  "Your kitchen is your playground. Let's create something special!",
+  "Fresh ingredients make the best meals. Check what's expiring soon!",
+  "Meal prepping today means less stress tomorrow.",
+  "Every recipe you try is a skill you build. Keep cooking!",
+  "The best meals come from using what you already have.",
+  "Cooking is an art, and you're the artist!",
+  "Time to turn those ingredients into something amazing!",
+  "A well-stocked kitchen is a happy kitchen!",
+  "Let's minimize waste and maximize flavor today!",
+  "Your pantry is full of possibilities. Let's explore!",
+  "Home cooking: better for your wallet, better for your health.",
+  "Every great meal starts with knowing what's in your kitchen.",
+  "Ready to discover a new recipe with what you have?",
+  "Good food, zero waste. That's the KitchenForge way!",
 ];
 
 // ═══════════════════════════════════════════════════
@@ -1613,13 +2039,19 @@ function renderHome() {
     </div>`;
   }).join('');
 
+  // Update recipe ingredient matches based on actual pantry
+  recipes.forEach(r => {
+    r.ingredients.forEach(i => {
+      i.have = pantryItems.some(p => p.name.toLowerCase() === i.name.toLowerCase());
+    });
+  });
   const sorted = [...recipes].sort((a,b) => {
     const aMatch = a.ingredients.filter(i => i.have).length / a.ingredients.length;
     const bMatch = b.ingredients.filter(i => i.have).length / b.ingredients.length;
     return bMatch - aMatch;
   });
   const recipeCarousel = document.getElementById('recipe-carousel');
-  recipeCarousel.innerHTML = sorted.slice(0,6).map(r => {
+  recipeCarousel.innerHTML = sorted.slice(0,10).map(r => {
     const have = r.ingredients.filter(i=>i.have).length;
     const total = r.ingredients.length;
     const pct = Math.round(have/total*100);
@@ -1635,6 +2067,10 @@ function renderHome() {
       </div>
     </div>`;
   }).join('');
+
+  // Update recipes ready count based on actual pantry matches
+  const readyCount = recipes.filter(r => r.ingredients.every(i => i.have)).length;
+  document.getElementById('recipe-count').textContent = readyCount;
 }
 
 // ═══════════════════════════════════════════════════
@@ -1652,10 +2088,17 @@ function renderPantry() {
   const totalCost = pantryItems.reduce((s,i) => s + (i.cost||0), 0);
   document.getElementById('pantry-total-cost').textContent = '$' + totalCost.toFixed(2);
   const grid = document.getElementById('pantry-grid');
+  if (items.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-light);">
+      <div style="font-size:48px;margin-bottom:12px;">&#x1F9FA;</div>
+      <div style="font-size:16px;font-weight:600;margin-bottom:4px;">${pantryItems.length === 0 ? 'Your pantry is empty' : 'No items match this filter'}</div>
+      <div style="font-size:13px;">${pantryItems.length === 0 ? 'Tap the + button to add your first items!' : 'Try a different category or clear your search.'}</div>
+    </div>`;
+    return;
+  }
   grid.innerHTML = items.map(item => {
     const color = item.expDays <= 2 ? 'red' : item.expDays <= 5 ? 'yellow' : 'green';
-    const expText = item.expDays <= 0 ? 'Expired' : item.expDays === 1 ? '1 day' : item.expDays + ' days';
-    const costText = item.cost ? '$' + item.cost.toFixed(2) : '';
+    const expText = item.expDays <= 0 ? 'Expired' : item.expDays === 1 ? '1 day left' : item.expDays + ' days left';
     return `<div class="pantry-item" onclick="openEditModal(${item.id})">
       <div class="item-top">
         <span class="emoji">${item.emoji}</span>
@@ -1664,7 +2107,6 @@ function renderPantry() {
       <div class="item-name">${item.name}</div>
       <div class="item-qty">${item.qty} ${item.unit}</div>
       <div class="item-exp">${expText}</div>
-      ${costText ? '<div class="item-cost">' + costText + '</div>' : ''}
     </div>`;
   }).join('');
 }
@@ -1682,10 +2124,29 @@ function filterCategory(btn, cat) {
 // ═══════════════════════════════════════════════════
 function renderRecipes() {
   let items = [...recipes];
-  if (cuisineFilter !== 'all') items = items.filter(r => r.cuisine === cuisineFilter);
+
+  // Apply text search filter (matches title, tags, cuisine, ingredients)
+  if (localSearchQuery && localSearchQuery.length >= 2) {
+    const q = localSearchQuery.toLowerCase().replace(/\s+/g,'');
+    const qWords = localSearchQuery.toLowerCase().split(/\s+/).filter(w => w.length >= 2);
+    items = items.filter(r => {
+      if (r.title.toLowerCase().includes(localSearchQuery.toLowerCase())) return true;
+      if (r.cuisine.toLowerCase().includes(localSearchQuery.toLowerCase())) return true;
+      if (r.tags && r.tags.some(t => qWords.some(w => t.includes(w)) || t.includes(q))) return true;
+      if (r.ingredients.some(i => i.name.toLowerCase().includes(localSearchQuery.toLowerCase()))) return true;
+      return false;
+    });
+  } else if (cuisineFilter !== 'all') {
+    items = items.filter(r => r.cuisine === cuisineFilter);
+  }
 
   items.forEach(r => {
-    r._haveCount = r.ingredients.filter(i => i.have).length;
+    r._haveCount = r.ingredients.filter(i => {
+      // Check if user actually has this ingredient in their pantry
+      const inPantry = pantryItems.some(p => p.name.toLowerCase() === i.name.toLowerCase());
+      i.have = inPantry;
+      return inPantry;
+    }).length;
     r._total = r.ingredients.length;
     r._missing = r._total - r._haveCount;
     r._matchPct = r._haveCount / r._total;
@@ -1697,22 +2158,28 @@ function renderRecipes() {
   else if (sort === 'missing') items.sort((a,b) => a._missing - b._missing);
 
   const grid = document.getElementById('recipe-grid');
-  grid.innerHTML = items.map(r => {
-    const pct = Math.round(r._matchPct * 100);
-    return `<div class="recipe-card" onclick="openRecipeDetail(${r.id})">
-      <div class="card-img ${r.grad}">
-        ${r.emoji}
-        <div class="cuisine-tag">${r.cuisine.charAt(0).toUpperCase()+r.cuisine.slice(1)}</div>
-        <div class="time-badge">\u23F1 ${r.time}m</div>
-      </div>
-      <div class="card-body">
-        <h4>${r.title}</h4>
-        <div class="match-bar"><div class="fill" style="width:${pct}%"></div></div>
-        <div class="match-text">${r._haveCount} of ${r._total} ingredients</div>
-        <div class="card-meta"><span>\u23F1 ${r.time} min</span><span>${r.servings} srv</span></div>
-      </div>
-    </div>`;
-  }).join('');
+  if (items.length === 0 && localSearchQuery) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);font-size:14px;padding:20px;">No local recipes match. Check online results below!</p>';
+  } else {
+    grid.innerHTML = items.map(r => {
+      const pct = Math.round(r._matchPct * 100);
+      const tagBadges = r.tags ? r.tags.slice(0,3).map(t => '<span class="tag" style="font-size:10px;padding:2px 6px;margin:1px;">' + t + '</span>').join('') : '';
+      return `<div class="recipe-card" onclick="openRecipeDetail(${r.id})">
+        <div class="card-img ${r.grad}">
+          ${r.emoji}
+          <div class="cuisine-tag">${r.cuisine.charAt(0).toUpperCase()+r.cuisine.slice(1)}</div>
+          <div class="time-badge">\u23F1 ${r.time}m</div>
+        </div>
+        <div class="card-body">
+          <h4>${r.title}</h4>
+          ${tagBadges ? '<div style="margin-bottom:4px;">' + tagBadges + '</div>' : ''}
+          <div class="match-bar"><div class="fill" style="width:${pct}%"></div></div>
+          <div class="match-text">${r._haveCount} of ${r._total} ingredients</div>
+          <div class="card-meta"><span>\u23F1 ${r.time} min</span><span>${r.servings} srv</span></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 function filterCuisine(btn, cuisine) {
@@ -1983,12 +2450,29 @@ function parseVoiceInput(text) {
   const parts = text.split(/\b(?:and|also|plus)\b|,|;/i);
   let foundItems = 0;
 
+  // Word-to-number mapping
+  const wordNums = {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,a:1,an:1};
+
   parts.forEach(part => {
     let trimmed = part.trim();
     if (!trimmed) return;
 
+    // Handle "a dozen eggs" or "one dozen eggs" or "two dozen eggs"
+    const dozenMatch = trimmed.match(/^(\w+)\s+dozen\s+(?:of\s+)?(.+)/i);
+    if (dozenMatch) {
+      const numWord = dozenMatch[1].toLowerCase();
+      const multiplier = wordNums[numWord] || parseInt(numWord) || 1;
+      trimmed = (multiplier * 12) + ' pcs ' + dozenMatch[2];
+    }
+
+    // Handle word numbers: "two blocks of cheddar" -> "2 blocks of cheddar"
+    const wordNumMatch = trimmed.match(/^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|a|an)\s+(.+)/i);
+    if (wordNumMatch && !dozenMatch) {
+      trimmed = wordNums[wordNumMatch[1].toLowerCase()] + ' ' + wordNumMatch[2];
+    }
+
     // Extract quantity and unit
-    const qtyMatch = trimmed.match(/^(\d+)\s*(liters?|litres?|l|kg|kilos?|g|grams?|oz|ounces?|lbs?|pounds?|pcs?|pieces?|bags?|boxes?|bottles?|cans?|cups?|gallons?|packs?|bunch|bunches|head|heads|loaf|loaves|cartons?|dozen)?\s*(?:of\s+)?(.+)/i);
+    const qtyMatch = trimmed.match(/^(\d+)\s*(liters?|litres?|l|kg|kilos?|g|grams?|oz|ounces?|lbs?|pounds?|pcs?|pieces?|bags?|boxes?|bottles?|cans?|cups?|gallons?|packs?|bunch|bunches|head|heads|loaf|loaves|cartons?|dozen|blocks?|sticks?|slices?|jars?|tubs?|fillets?)?\s*(?:of\s+)?(.+)/i);
 
     let qty = 1, unit = 'pcs', name = trimmed;
     if (qtyMatch) {
@@ -2003,14 +2487,18 @@ function parseVoiceInput(text) {
     if (/^l$|^liters?$|^litres?$/i.test(unit)) unit = 'L';
     if (/^kg$|^kilos?$/i.test(unit)) unit = 'kg';
     if (/^g$|^grams?$/i.test(unit)) unit = 'g';
+    if (/^oz$|^ounces?$/i.test(unit)) unit = 'oz';
+    if (/^lbs?$|^pounds?$/i.test(unit)) unit = 'lb';
+    if (/^dozen$/i.test(unit)) { qty = qty * 12; unit = 'pcs'; }
 
     name = name.replace(/\s+/g, ' ').trim();
     name = name.charAt(0).toUpperCase() + name.slice(1);
 
     const emoji = Object.entries(emojiMap).find(([k]) => name.toLowerCase().includes(k))?.[1] || "\u{1F34F}";
     const expDays = getShelfLife(name) || 7;
+    const cat = detectCategory(name);
 
-    addedItems.push({name, emoji, qty, unit, expDays, cost: 0});
+    addedItems.push({name, emoji, qty, unit, expDays, cost: 0, cat});
     foundItems++;
   });
 
@@ -2032,7 +2520,8 @@ function addManualItem() {
   // Use shelf life lookup if user hasn't changed expiry from default
   const shelfDays = getShelfLife(name);
   const expDays = shelfDays || selectedExpiry;
-  addedItems.push({name, emoji, qty:Number(qty), unit, expDays, cost});
+  const cat = detectCategory(name);
+  addedItems.push({name, emoji, qty:Number(qty), unit, expDays, cost, cat});
   document.getElementById('manual-name').value = '';
   document.getElementById('manual-qty').value = '';
   document.getElementById('manual-unit').value = '';
@@ -2094,7 +2583,7 @@ function saveToPantry() {
       id: Date.now() + Math.random(),
       name: item.name, emoji: item.emoji,
       qty: item.qty, unit: item.unit,
-      cat: 'produce', expDays: item.expDays,
+      cat: item.cat || detectCategory(item.name), expDays: item.expDays,
       cost: item.cost || 0, addedDate: today
     });
     batchCost += (item.cost || 0);
@@ -2114,6 +2603,7 @@ function saveToPantry() {
   showToast(count + ' items saved — $' + batchCost.toFixed(2) + ' added!');
   renderHome();
   renderPantry();
+  savePantryData();
   setTimeout(() => navigateTo('pantry'), 800);
 }
 
@@ -2134,7 +2624,7 @@ function openEditModal(id) {
   document.getElementById('edit-name').textContent = item.name;
   const color = item.expDays <= 2 ? 'red' : item.expDays <= 5 ? 'orange' : 'green';
   const expLabel = item.expDays <= 0 ? 'Expired!' : item.expDays === 1 ? 'Expires tomorrow' : 'Expires in ' + item.expDays + ' days';
-  document.getElementById('edit-expiry-info').textContent = expLabel;
+  document.getElementById('edit-expiry-info').textContent = expLabel + (item.addedDate ? ' (added ' + item.addedDate + ')' : '');
   document.getElementById('edit-expiry-info').style.color = color === 'red' ? 'var(--danger)' : color === 'orange' ? 'var(--warning)' : 'var(--success)';
   document.getElementById('edit-qty-val').textContent = editQty;
   document.getElementById('edit-exp-val').textContent = editExp;
@@ -2169,6 +2659,7 @@ function saveEditItem() {
   closeEditModal();
   renderPantry();
   renderHome();
+  savePantryData();
   showToast(item.name + ' updated!');
 }
 
@@ -2181,6 +2672,7 @@ function markAsUsed() {
   document.getElementById('total-items').textContent = pantryItems.length;
   renderPantry();
   renderHome();
+  savePantryData();
   showToast(name + ' marked as used! \u{1F373}');
 }
 
@@ -2193,6 +2685,7 @@ function deleteEditItem() {
   document.getElementById('total-items').textContent = pantryItems.length;
   renderPantry();
   renderHome();
+  savePantryData();
   showToast(name + ' removed from pantry');
 }
 
@@ -2236,12 +2729,16 @@ function clearAllPantry() {
     showToast('Pantry is already empty!');
     return;
   }
-  const confirmed = confirm('Clear all ' + pantryItems.length + ' items from your pantry? This cannot be undone.');
+  const confirmed = confirm('Clear all ' + pantryItems.length + ' items from your food inventory? This cannot be undone.');
   if (!confirmed) return;
   pantryItems.length = 0;
+  pantryFilter = 'all';
+  document.querySelectorAll('#pantry-chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#pantry-chips .chip')?.classList.add('active');
   document.getElementById('total-items').textContent = '0';
   renderPantry();
   renderHome();
+  savePantryData();
   showToast('Pantry cleared!');
 }
 
@@ -2257,6 +2754,63 @@ function toggleUnits() {
 function toggleDarkMode() {
   document.body.classList.toggle('dark');
   document.getElementById('dark-toggle').classList.toggle('on');
+  localStorage.setItem('kf_darkMode', document.body.classList.contains('dark') ? '1' : '0');
+}
+function toggleUnitsStore() {
+  localStorage.setItem('kf_units', isMetric ? 'metric' : 'imperial');
+}
+// Restore settings on load
+(function restoreSettings() {
+  if (localStorage.getItem('kf_darkMode') === '1') {
+    document.body.classList.add('dark');
+    const dt = document.getElementById('dark-toggle');
+    if (dt) dt.classList.add('on');
+  }
+  const savedUnits = localStorage.getItem('kf_units');
+  if (savedUnits === 'imperial') {
+    isMetric = false;
+    const ud = document.getElementById('units-display');
+    if (ud) ud.innerHTML = 'Imperial <span class="chevron">\u203A</span>';
+  }
+})();
+
+function exportPantryData() {
+  const data = {pantry: pantryItems, spending: spendingLog, exportDate: new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'kitchenforge-export.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('Data exported as JSON file!');
+}
+
+function deleteAccountConfirm() {
+  const confirmed = confirm('Are you sure you want to reset all data? This will clear your pantry, spending history, and all settings. This cannot be undone.');
+  if (!confirmed) return;
+  const doubleConfirm = confirm('This is permanent. Are you really sure?');
+  if (!doubleConfirm) return;
+  localStorage.removeItem('kf_pantry');
+  localStorage.removeItem('kf_spending');
+  localStorage.removeItem('kf_darkMode');
+  localStorage.removeItem('kf_units');
+  pantryItems.length = 0;
+  spendingLog.length = 0;
+  addedItems = [];
+  pantryFilter = 'all';
+  document.querySelectorAll('#pantry-chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#pantry-chips .chip')?.classList.add('active');
+  document.getElementById('total-items').textContent = '0';
+  document.body.classList.remove('dark');
+  const dt = document.getElementById('dark-toggle');
+  if (dt) dt.classList.remove('on');
+  isMetric = true;
+  const ud = document.getElementById('units-display');
+  if (ud) ud.innerHTML = 'Metric <span class="chevron">\u203A</span>';
+  renderAddedItems();
+  renderPantry();
+  renderHome();
+  renderSpending();
+  showToast('All data has been reset.');
 }
 
 // ═══════════════════════════════════════════════════
@@ -2275,9 +2829,16 @@ function showToast(msg) {
 let onlineRecipes = [];
 let recipeSearchTimeout = null;
 
+let localSearchQuery = '';
+
 function debounceRecipeSearch() {
   if (recipeSearchTimeout) clearTimeout(recipeSearchTimeout);
   const query = document.getElementById('recipe-search').value.trim();
+  localSearchQuery = query;
+
+  // Always filter local recipes by search query
+  renderRecipes();
+
   if (query.length < 2) {
     document.getElementById('online-recipes-section').style.display = 'none';
     onlineRecipes = [];
@@ -2289,18 +2850,142 @@ function debounceRecipeSearch() {
 async function fetchOnlineRecipes(query) {
   try {
     showToast('Searching online recipes...');
+
+    // Diet/lifestyle keyword mappings for smart search
+    const dietKeywords = {
+      'whole 30':{ categories:['Chicken','Seafood','Beef','Lamb'], ingredients:['chicken_breast','salmon','avocado'] },
+      'whole30':{ categories:['Chicken','Seafood','Beef','Lamb'], ingredients:['chicken_breast','salmon','avocado'] },
+      'keto':{ categories:['Chicken','Beef','Pork','Seafood'], ingredients:['chicken','bacon','cheese'] },
+      'paleo':{ categories:['Chicken','Seafood','Beef'], ingredients:['chicken_breast','salmon','sweet_potato'] },
+      'vegan':{ categories:['Vegan'] },
+      'vegetarian':{ categories:['Vegetarian'] },
+      'healthy':{ categories:['Chicken','Seafood','Vegetarian'], ingredients:['salmon','chicken_breast'] },
+      'low carb':{ categories:['Chicken','Beef','Seafood'], ingredients:['chicken','salmon','egg'] },
+      'gluten free':{ categories:['Seafood','Chicken'], ingredients:['rice','potato','chicken'] },
+      'dessert':{ categories:['Dessert'] },
+      'seafood':{ categories:['Seafood'] },
+      'breakfast':{ categories:['Breakfast'] },
+      'pasta':{ categories:['Pasta'] },
+      'soup':{ ingredients:['soup'] },
+      'salad':{ ingredients:['salad'] },
+      'quick':{ categories:['Starter','Side','Breakfast'] }
+    };
+
+    // Step 1: Try direct name search first
     const resp = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=' + encodeURIComponent(query));
     const data = await resp.json();
-
-    if (!data.meals || data.meals.length === 0) {
-      document.getElementById('online-recipes-section').style.display = 'block';
-      document.getElementById('online-recipe-grid').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);font-size:14px;padding:20px;">No recipes found. Try a different search!</p>';
+    if (data.meals && data.meals.length > 0) {
+      onlineRecipes = data.meals.map(meal => parseMealDBRecipe(meal));
+      renderOnlineRecipes();
+      showToast('Found ' + onlineRecipes.length + ' recipes!');
       return;
     }
 
-    onlineRecipes = data.meals.map(meal => parseMealDBRecipe(meal));
-    renderOnlineRecipes();
-    showToast('Found ' + onlineRecipes.length + ' recipes!');
+    // Step 2: Check for diet/lifestyle keywords
+    const queryLower = query.toLowerCase().trim();
+    let dietMatch = null;
+    for (const [keyword, config] of Object.entries(dietKeywords)) {
+      if (queryLower.includes(keyword)) { dietMatch = config; break; }
+    }
+
+    let allMeals = [];
+
+    if (dietMatch) {
+      // Search by categories
+      if (dietMatch.categories) {
+        for (const cat of dietMatch.categories.slice(0, 3)) {
+          try {
+            const catResp = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?c=' + encodeURIComponent(cat));
+            const catData = await catResp.json();
+            if (catData.meals) {
+              const shuffled = catData.meals.sort(() => 0.5 - Math.random());
+              for (const m of shuffled.slice(0, 3)) {
+                const fullResp = await fetch('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + m.idMeal);
+                const fullData = await fullResp.json();
+                if (fullData.meals) allMeals.push(fullData.meals[0]);
+              }
+            }
+          } catch(e) {}
+          if (allMeals.length >= 8) break;
+        }
+      }
+      // Also search by ingredients if needed
+      if (dietMatch.ingredients && allMeals.length < 6) {
+        for (const ing of dietMatch.ingredients.slice(0, 2)) {
+          try {
+            const ingResp = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?i=' + encodeURIComponent(ing));
+            const ingData = await ingResp.json();
+            if (ingData.meals) {
+              for (const m of ingData.meals.slice(0, 3)) {
+                if (!allMeals.some(e => e.idMeal === m.idMeal)) {
+                  const fullResp = await fetch('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + m.idMeal);
+                  const fullData = await fullResp.json();
+                  if (fullData.meals) allMeals.push(fullData.meals[0]);
+                }
+              }
+            }
+          } catch(e) {}
+          if (allMeals.length >= 10) break;
+        }
+      }
+    }
+
+    // Step 3: Try searching individual words as ingredients or areas
+    if (allMeals.length === 0) {
+      const words = query.trim().split(/\s+/).filter(w => w.length >= 3);
+      for (const word of words) {
+        try {
+          const ingResp = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?i=' + encodeURIComponent(word));
+          const ingData = await ingResp.json();
+          if (ingData.meals) {
+            const shuffled = ingData.meals.sort(() => 0.5 - Math.random());
+            for (const m of shuffled.slice(0, 6)) {
+              const fullResp = await fetch('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + m.idMeal);
+              const fullData = await fullResp.json();
+              if (fullData.meals) allMeals.push(fullData.meals[0]);
+            }
+            if (allMeals.length > 0) break;
+          }
+        } catch(e) {}
+        try {
+          const areaResp = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?a=' + encodeURIComponent(word));
+          const areaData = await areaResp.json();
+          if (areaData.meals) {
+            const shuffled = areaData.meals.sort(() => 0.5 - Math.random());
+            for (const m of shuffled.slice(0, 6)) {
+              const fullResp = await fetch('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + m.idMeal);
+              const fullData = await fullResp.json();
+              if (fullData.meals) allMeals.push(fullData.meals[0]);
+            }
+            if (allMeals.length > 0) break;
+          }
+        } catch(e) {}
+      }
+    }
+
+    // Step 4: Fallback — try first word as name search
+    if (allMeals.length === 0) {
+      const firstWord = query.trim().split(/\s+/)[0];
+      if (firstWord && firstWord.length >= 2) {
+        try {
+          const searchResp = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=' + encodeURIComponent(firstWord));
+          const searchData = await searchResp.json();
+          if (searchData.meals) allMeals = searchData.meals.slice(0, 8);
+        } catch(e) {}
+      }
+    }
+
+    // Deduplicate and render
+    if (allMeals.length > 0) {
+      const seen = new Set();
+      allMeals = allMeals.filter(m => { if (seen.has(m.idMeal)) return false; seen.add(m.idMeal); return true; });
+      onlineRecipes = allMeals.map(meal => parseMealDBRecipe(meal));
+      renderOnlineRecipes();
+      showToast('Found ' + onlineRecipes.length + ' recipes!');
+    } else {
+      document.getElementById('online-recipes-section').style.display = 'block';
+      document.getElementById('online-recipe-grid').innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);font-size:14px;padding:20px;">No recipes found. Try a different search!</p>';
+    }
   } catch (err) {
     showToast('Could not search online. Check your connection!');
   }
@@ -2508,15 +3193,15 @@ function startCookingOnline() {
 //  CAT GREETING
 // ═══════════════════════════════════════════════════
 function showCatGreeting() {
-  const catEmojis = ['\u{1F431}','\u{1F63A}','\u{1F63B}','\u{1F63D}','\u{1F638}','\u{1F639}','\u{1F63C}'];
-  const greetings = ['Hi there!','Meow-llo!','Hey friend!','Purr-fect day!','Hello human!','Hiya!','Welcome back!'];
-  const fact = catFacts[Math.floor(Math.random() * catFacts.length)];
-  const emoji = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+  const chefEmojis = ['\u{1F468}\u{200D}\u{1F373}','\u{1F469}\u{200D}\u{1F373}','\u{1F958}','\u{1F373}','\u{1F372}','\u{1F96A}','\u{1F37D}\u{FE0F}'];
+  const greetings = ['Welcome back, Chef!','Ready to cook?','Hey there, foodie!','Let\'s get cooking!','Hello, Chef!','Time to create!','Welcome back!'];
+  const tip = cookingMotivation[Math.floor(Math.random() * cookingMotivation.length)];
+  const emoji = chefEmojis[Math.floor(Math.random() * chefEmojis.length)];
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
   document.querySelector('#cat-greeting .cat-emoji').textContent = emoji;
   document.querySelector('#cat-greeting .cat-hi').textContent = greeting;
-  document.getElementById('cat-fact-text').textContent = fact;
+  document.getElementById('cat-fact-text').textContent = tip;
   document.getElementById('cat-greeting').classList.remove('hidden');
 }
 function dismissCatGreeting() {

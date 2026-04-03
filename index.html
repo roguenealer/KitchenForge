@@ -749,7 +749,7 @@ body.dark {
     <h2>Good to see you!</h2>
     <div class="stats-row">
       <div class="stat">
-        <div class="num" id="total-items">47</div>
+        <div class="num" id="total-items">0</div>
         <div class="label">items in pantry</div>
       </div>
       <div class="stat">
@@ -819,11 +819,11 @@ body.dark {
   <div class="screen-header">
     <h1>Food Inventory</h1>
     <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:14px;color:var(--text-secondary);" id="pantry-count">47 items</span>
+      <span style="font-size:14px;color:var(--text-secondary);" id="pantry-count">0 items</span>
       <button class="clear-all-btn" onclick="clearAllPantry()">&#x1F5D1;&#xFE0F; Clear All</button>
     </div>
   </div>
-  <div class="pantry-value" style="display:none;">
+  <div class="pantry-value">
     <div><div class="val" id="pantry-total-cost">$0.00</div><div class="lbl">Total pantry value</div></div>
     <span style="font-size:28px;">&#x1F4B5;</span>
   </div>
@@ -1227,6 +1227,33 @@ const _samplePantryItems = [
 
 // Spending log tracks all purchases for daily/weekly/monthly breakdown
 const spendingLog = JSON.parse(localStorage.getItem('kf_spending') || '[]');
+
+// Load sample data on first visit
+if (pantryItems.length === 0 && !localStorage.getItem('kf_pantry')) {
+  _samplePantryItems.forEach(item => pantryItems.push(Object.assign({}, item)));
+}
+
+// Recalculate expDays based on addedDate so expiry counts down over time
+function recalcExpiry() {
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  pantryItems.forEach(item => {
+    if (item.addedDate && item._origExpDays !== undefined) {
+      const added = new Date(item.addedDate);
+      added.setHours(0,0,0,0);
+      const expDate = new Date(added.getTime() + item._origExpDays * 86400000);
+      item.expDays = Math.ceil((expDate - now) / 86400000);
+    } else if (item.addedDate && item.expDays !== undefined) {
+      // First time: store original shelf life, then compute remaining
+      item._origExpDays = item.expDays;
+      const added = new Date(item.addedDate);
+      added.setHours(0,0,0,0);
+      const expDate = new Date(added.getTime() + item._origExpDays * 86400000);
+      item.expDays = Math.ceil((expDate - now) / 86400000);
+    }
+  });
+}
+recalcExpiry();
 
 // Save data to localStorage whenever it changes
 function savePantryData() {
@@ -2061,6 +2088,14 @@ function renderPantry() {
   const totalCost = pantryItems.reduce((s,i) => s + (i.cost||0), 0);
   document.getElementById('pantry-total-cost').textContent = '$' + totalCost.toFixed(2);
   const grid = document.getElementById('pantry-grid');
+  if (items.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-light);">
+      <div style="font-size:48px;margin-bottom:12px;">&#x1F9FA;</div>
+      <div style="font-size:16px;font-weight:600;margin-bottom:4px;">${pantryItems.length === 0 ? 'Your pantry is empty' : 'No items match this filter'}</div>
+      <div style="font-size:13px;">${pantryItems.length === 0 ? 'Tap the + button to add your first items!' : 'Try a different category or clear your search.'}</div>
+    </div>`;
+    return;
+  }
   grid.innerHTML = items.map(item => {
     const color = item.expDays <= 2 ? 'red' : item.expDays <= 5 ? 'yellow' : 'green';
     const expText = item.expDays <= 0 ? 'Expired' : item.expDays === 1 ? '1 day left' : item.expDays + ' days left';
@@ -2697,6 +2732,9 @@ function clearAllPantry() {
   const confirmed = confirm('Clear all ' + pantryItems.length + ' items from your food inventory? This cannot be undone.');
   if (!confirmed) return;
   pantryItems.length = 0;
+  pantryFilter = 'all';
+  document.querySelectorAll('#pantry-chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#pantry-chips .chip')?.classList.add('active');
   document.getElementById('total-items').textContent = '0';
   renderPantry();
   renderHome();
@@ -2757,7 +2795,18 @@ function deleteAccountConfirm() {
   localStorage.removeItem('kf_units');
   pantryItems.length = 0;
   spendingLog.length = 0;
+  addedItems = [];
+  pantryFilter = 'all';
+  document.querySelectorAll('#pantry-chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#pantry-chips .chip')?.classList.add('active');
   document.getElementById('total-items').textContent = '0';
+  document.body.classList.remove('dark');
+  const dt = document.getElementById('dark-toggle');
+  if (dt) dt.classList.remove('on');
+  isMetric = true;
+  const ud = document.getElementById('units-display');
+  if (ud) ud.innerHTML = 'Metric <span class="chevron">\u203A</span>';
+  renderAddedItems();
   renderPantry();
   renderHome();
   renderSpending();
