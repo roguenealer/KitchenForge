@@ -727,6 +727,27 @@ body.dark {
   .pantry-grid { grid-template-columns:repeat(4,1fr); }
   .recipe-grid { grid-template-columns:repeat(4,1fr); }
 }
+
+/* ── Pregnancy Safety Mode ── */
+.preg-badge { font-size:13px; line-height:1; cursor:pointer; margin-left:4px; filter:drop-shadow(0 1px 1px rgba(0,0,0,0.2)); }
+.preg-badge.avoid { animation:pregPulse 2s ease-in-out infinite; }
+@keyframes pregPulse { 0%,100%{opacity:1;} 50%{opacity:0.55;} }
+.preg-card-badge { position:absolute; top:8px; left:8px; display:flex; align-items:center; gap:3px;
+  font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; color:#fff;
+  background:var(--warning); box-shadow:var(--shadow); }
+.preg-card-badge.avoid { background:var(--danger); }
+.preg-warn-banner { margin:0 0 16px; padding:14px 16px; border-radius:var(--radius-sm);
+  background:var(--warning-light); border:1px solid var(--warning); font-size:13px; line-height:1.5; color:var(--text); }
+.preg-warn-banner.avoid { background:var(--danger-light); border-color:var(--danger); }
+.preg-warn-banner strong { display:block; margin-bottom:6px; font-size:14px; }
+.preg-warn-banner > div { margin:3px 0; }
+.preg-warn-banner .disclaimer { margin-top:8px; font-size:11px; color:var(--text-secondary); font-style:italic; }
+.preg-home-banner { display:flex; align-items:center; gap:10px; margin:0 16px 14px; padding:12px 14px;
+  border-radius:var(--radius-sm); background:linear-gradient(135deg,#fff0f5,#ffe9ef);
+  border:1px solid #ffd0de; font-size:13px; color:var(--text); }
+body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
+.preg-home-banner .pb-emoji { font-size:22px; }
+.preg-home-banner b { color:var(--danger); }
 </style>
 </head>
 <body>
@@ -744,6 +765,8 @@ body.dark {
       <span class="badge"></span>
     </button>
   </div>
+
+  <div id="preg-home-banner-slot"></div>
 
   <div class="stats-banner">
     <h2>Good to see you!</h2>
@@ -1040,6 +1063,22 @@ body.dark {
     </div>
 
     <div class="setting-group">
+      <div class="setting-group-title">Health</div>
+      <div class="setting-item" onclick="togglePregnancyMode()">
+        <div class="left">
+          <span class="icon">&#x1F931;</span>
+          <span class="label">Pregnancy mode</span>
+        </div>
+        <div class="right">
+          <div class="toggle" id="preg-toggle"><div class="knob"></div></div>
+        </div>
+      </div>
+      <div id="preg-note" style="display:none;padding:4px 16px 12px;font-size:11px;color:var(--text-light);line-height:1.5;">
+        Flags foods to <b>avoid</b> or <b>limit</b> during pregnancy across your pantry and recipes. General guidance based on public health advice (NHS / ACOG / FDA) &mdash; not medical advice. Always check with your healthcare provider.
+      </div>
+    </div>
+
+    <div class="setting-group">
       <div class="setting-group-title">Data</div>
       <div class="setting-item" onclick="exportPantryData()">
         <div class="left">
@@ -1062,7 +1101,7 @@ body.dark {
     </div>
 
     <div style="text-align:center;padding:20px;font-size:12px;color:var(--text-light);">
-      KitchenForge v1.5.0<br>Made with &#x2764;&#xFE0F; for zero food waste
+      KitchenForge v1.6.0<br>Made with &#x2764;&#xFE0F; for zero food waste
     </div>
   </div>
 </section>
@@ -2036,11 +2075,14 @@ function renderHome() {
     const color = item.expDays <= 2 ? 'red' : item.expDays <= 5 ? 'yellow' : 'green';
     const daysText = item.expDays <= 0 ? 'Expired!' : item.expDays === 1 ? '1 day left' : item.expDays + ' days left';
     return `<div class="expiry-card ${color}">
-      <div class="emoji">${item.emoji}</div>
+      <div class="emoji">${item.emoji}${pregBadge(item.name)}</div>
       <div class="name">${item.name}</div>
       <div class="days">${daysText}</div>
     </div>`;
   }).join('');
+
+  // Pregnancy-mode dashboard banner
+  renderPregnancyHomeBanner();
 
   // Update recipe ingredient matches based on actual pantry
   recipes.forEach(r => {
@@ -2105,7 +2147,7 @@ function renderPantry() {
     return `<div class="pantry-item" onclick="openEditModal(${item.id})">
       <div class="item-top">
         <span class="emoji">${item.emoji}</span>
-        <span class="expiry-dot ${color}"></span>
+        <span style="display:flex;align-items:center;">${pregBadge(item.name)}<span class="expiry-dot ${color}"></span></span>
       </div>
       <div class="item-name">${item.name}</div>
       <div class="item-qty">${item.qty} ${item.unit}</div>
@@ -2167,9 +2209,13 @@ function renderRecipes() {
     grid.innerHTML = items.map(r => {
       const pct = Math.round(r._matchPct * 100);
       const tagBadges = r.tags ? r.tags.slice(0,3).map(t => '<span class="tag" style="font-size:10px;padding:2px 6px;margin:1px;">' + t + '</span>').join('') : '';
+      const pregHits = pregnancyMode ? r.ingredients.map(i => pregnancyRisk(i.name)).filter(Boolean) : [];
+      const pregAvoid = pregHits.some(h => h.level === 'avoid');
+      const pregCardBadge = pregHits.length ? `<div class="preg-card-badge ${pregAvoid?'avoid':'limit'}">${pregAvoid?'⛔':'⚠️'} ${pregHits.length}</div>` : '';
       return `<div class="recipe-card" onclick="openRecipeDetail(${r.id})">
         <div class="card-img ${r.grad}">
           ${r.emoji}
+          ${pregCardBadge}
           <div class="cuisine-tag">${r.cuisine.charAt(0).toUpperCase()+r.cuisine.slice(1)}</div>
           <div class="time-badge">\u23F1 ${r.time}m</div>
         </div>
@@ -2212,6 +2258,26 @@ function openRecipeDetail(id) {
   const have = r.ingredients.filter(i=>i.have).length;
   const total = r.ingredients.length;
   const content = document.getElementById('detail-content');
+
+  // Pregnancy caution banner (deduped by ingredient name)
+  let pregBanner = '';
+  if (pregnancyMode) {
+    const seen = new Set();
+    const flags = [];
+    r.ingredients.forEach(i => {
+      const risk = pregnancyRisk(i.name);
+      if (risk && !seen.has(i.name.toLowerCase())) { seen.add(i.name.toLowerCase()); flags.push({name:i.name, level:risk.level, reason:risk.reason}); }
+    });
+    if (flags.length) {
+      const hasAvoid = flags.some(f => f.level === 'avoid');
+      pregBanner = `<div class="preg-warn-banner ${hasAvoid?'avoid':'limit'}">
+        <strong>\u{1F931} Pregnancy note</strong>
+        ${flags.map(f => `<div>${f.level==='avoid'?'⛔':'⚠️'} <b>${f.name}</b> — ${f.reason}</div>`).join('')}
+        <div class="disclaimer">General guidance, not medical advice. Check with your healthcare provider.</div>
+      </div>`;
+    }
+  }
+
   content.innerHTML = `
     <div class="title-section">
       <h2>${r.title}</h2>
@@ -2223,6 +2289,7 @@ function openRecipeDetail(id) {
         <span>\u{1F525} ${r.nutrition?.cal || '---'} cal</span>
       </div>
     </div>
+    ${pregBanner}
     <div class="detail-section">
       <h3>Ingredients</h3>
       ${r.ingredients.map(i => `
@@ -3272,6 +3339,87 @@ function showCatGreeting() {
 function dismissCatGreeting() {
   document.getElementById('cat-greeting').classList.add('hidden');
 }
+
+// ═══════════════════════════════════════════════════
+//  PREGNANCY SAFETY MODE
+//  Food-safety guidance based on public health advice
+//  (NHS / ACOG / FDA). General info, NOT medical advice.
+// ═══════════════════════════════════════════════════
+let pregnancyMode = localStorage.getItem('kf_pregnancy') === '1';
+
+// Order matters: most specific keywords first (e.g. "smoked salmon" before "salmon").
+const PREGNANCY_RULES = [
+  {kw:['shark','swordfish','king mackerel','marlin','tilefish','bigeye'],level:'avoid',reason:'High-mercury fish — best avoided in pregnancy.'},
+  {kw:['sushi','sashimi','raw fish','smoked salmon','lox','raw oyster','raw shellfish','ceviche'],level:'avoid',reason:'Raw or smoked seafood can carry listeria/parasites — avoid.'},
+  {kw:['tuna'],level:'limit',reason:'Limit tuna due to mercury (canned light tuna in moderation).'},
+  {kw:['salmon','shrimp','prawn','crab','lobster','cod','tilapia','fish','seafood'],level:'limit',reason:'Fine when fully cooked — avoid raw or undercooked.'},
+  {kw:['deli','cold cut','lunch meat','ham','salami','prosciutto','hot dog','pepperoni','bologna'],level:'avoid',reason:'Cured/deli meats carry listeria risk unless heated until steaming.'},
+  {kw:['pate','liver'],level:'avoid',reason:'Very high in vitamin A — avoid liver and pâté.'},
+  {kw:['bacon','sausage','pork chop','ground beef','steak','chicken breast','chicken','turkey','lamb','meat'],level:'limit',reason:'Cook thoroughly — no pink or rare meat.'},
+  {kw:['brie','camembert','blue cheese','feta','goat cheese','queso fresco','roquefort','gorgonzola','mozzarella di bufala'],level:'avoid',reason:'Soft/mould-ripened cheese — listeria risk unless cooked.'},
+  {kw:['cheese','milk','cream','yogurt','sour cream'],level:'limit',reason:'Choose pasteurized only.'},
+  {kw:['egg'],level:'limit',reason:'Cook until firm — avoid runny or raw eggs.'},
+  {kw:['sprout','alfalfa','bean sprout'],level:'avoid',reason:'Raw sprouts can harbour bacteria — cook thoroughly.'},
+  {kw:['coffee','espresso','cola','energy drink','black tea','green tea','matcha'],level:'limit',reason:'Limit caffeine to about 200 mg/day.'},
+  {kw:['wine','beer','vodka','whiskey','whisky','rum','liquor','alcohol','champagne','cocktail','cider'],level:'avoid',reason:'No amount of alcohol is considered safe in pregnancy.'},
+];
+
+function pregnancyRisk(name) {
+  if (!name) return null;
+  const n = name.toLowerCase();
+  for (const rule of PREGNANCY_RULES) {
+    if (rule.kw.some(k => n.includes(k))) return {level: rule.level, reason: rule.reason};
+  }
+  return null;
+}
+
+// Inline badge for pantry/dashboard cards
+function pregBadge(name) {
+  if (!pregnancyMode) return '';
+  const r = pregnancyRisk(name);
+  if (!r) return '';
+  const icon = r.level === 'avoid' ? '⛔' : '⚠️';
+  const safeReason = r.reason.replace(/'/g, '');
+  const label = r.level === 'avoid' ? 'Avoid in pregnancy' : 'Pregnancy caution';
+  return `<span class="preg-badge ${r.level}" title="${label}: ${r.reason}" onclick="event.stopPropagation();showToast('${label}: ${safeReason}')">${icon}</span>`;
+}
+
+// Dashboard banner summarising how many pantry items to watch
+function renderPregnancyHomeBanner() {
+  const slot = document.getElementById('preg-home-banner-slot');
+  if (!slot) return;
+  if (!pregnancyMode) { slot.innerHTML = ''; return; }
+  const flagged = pantryItems.filter(i => pregnancyRisk(i.name));
+  const avoid = flagged.filter(i => pregnancyRisk(i.name).level === 'avoid').length;
+  if (flagged.length === 0) {
+    slot.innerHTML = `<div class="preg-home-banner"><span class="pb-emoji">\u{1F931}</span>
+      <span>Pregnancy mode is on. Nothing in your pantry needs special caution right now.</span></div>`;
+    return;
+  }
+  slot.innerHTML = `<div class="preg-home-banner"><span class="pb-emoji">\u{1F931}</span>
+    <span><b>${flagged.length}</b> item${flagged.length>1?'s':''} to watch${avoid?` (${avoid} to avoid)`:''} during pregnancy. Tap the ⚠️/⛔ badges for details.</span></div>`;
+}
+
+function togglePregnancyMode() {
+  pregnancyMode = !pregnancyMode;
+  localStorage.setItem('kf_pregnancy', pregnancyMode ? '1' : '0');
+  const t = document.getElementById('preg-toggle');
+  if (t) t.classList.toggle('on', pregnancyMode);
+  const note = document.getElementById('preg-note');
+  if (note) note.style.display = pregnancyMode ? 'block' : 'none';
+  renderHome();
+  renderPantry();
+  renderRecipes();
+  showToast(pregnancyMode ? '\u{1F931} Pregnancy mode on — flagging foods to watch' : 'Pregnancy mode off');
+}
+
+// Restore toggle state on load
+(function restorePregnancy() {
+  const t = document.getElementById('preg-toggle');
+  if (t && pregnancyMode) t.classList.add('on');
+  const note = document.getElementById('preg-note');
+  if (note) note.style.display = pregnancyMode ? 'block' : 'none';
+})();
 
 // ═══════════════════════════════════════════════════
 //  INIT
