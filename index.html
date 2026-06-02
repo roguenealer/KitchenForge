@@ -748,6 +748,22 @@ body.dark {
 body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
 .preg-home-banner .pb-emoji { font-size:22px; }
 .preg-home-banner b { color:var(--danger); }
+
+/* ── Household Food Planner ── */
+.hh-stepper { display:flex; align-items:center; gap:10px; }
+.hh-stepper button { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:16px; font-weight:700; cursor:pointer; line-height:1; }
+.hh-stepper #hh-size { min-width:18px; text-align:center; font-weight:700; }
+.household-card { margin:0 16px 14px; padding:14px 16px; border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+.household-card .hc-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; gap:8px; }
+.household-card .hc-title { font-size:14px; font-weight:700; color:var(--text); }
+.household-card .hc-sub { font-size:12px; color:var(--text-secondary); }
+.household-card .hc-stat { font-size:13px; color:var(--text); margin-bottom:6px; line-height:1.5; }
+.household-card .hc-stat b { color:var(--warning); }
+.hc-chips { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-top:6px; }
+.hc-chip { flex:0 0 auto; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:6px 10px; font-size:12px; text-align:center; min-width:64px; }
+.hc-chip .e { font-size:18px; }
+.hc-chip .n { font-weight:600; white-space:nowrap; }
+.hc-chip .d { color:var(--danger); font-size:11px; }
 </style>
 </head>
 <body>
@@ -767,6 +783,8 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
   </div>
 
   <div id="preg-home-banner-slot"></div>
+
+  <div id="household-planner-slot"></div>
 
   <div class="stats-banner">
     <h2>Good to see you!</h2>
@@ -1063,6 +1081,35 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
     </div>
 
     <div class="setting-group">
+      <div class="setting-group-title">Household</div>
+      <div class="setting-item">
+        <div class="left">
+          <span class="icon">&#x1F465;</span>
+          <span class="label">Household size</span>
+        </div>
+        <div class="right">
+          <div class="hh-stepper">
+            <button onclick="changeHousehold(-1)">&#x2212;</button>
+            <span id="hh-size">2</span>
+            <button onclick="changeHousehold(1)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="setting-item">
+        <div class="left">
+          <span class="icon">&#x1F4C5;</span>
+          <span class="label">Make food last</span>
+        </div>
+        <div class="right">
+          <div class="slider-wrapper">
+            <input type="range" min="1" max="30" value="7" id="hh-days-slider" oninput="setTargetDays(this.value)">
+            <span id="hh-days-val">7 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-group">
       <div class="setting-group-title">Health</div>
       <div class="setting-item" onclick="togglePregnancyMode()">
         <div class="left">
@@ -1101,7 +1148,7 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
     </div>
 
     <div style="text-align:center;padding:20px;font-size:12px;color:var(--text-light);">
-      KitchenForge v1.6.0<br>Made with &#x2764;&#xFE0F; for zero food waste
+      KitchenForge v1.7.0<br>Made with &#x2764;&#xFE0F; for zero food waste
     </div>
   </div>
 </section>
@@ -2083,6 +2130,8 @@ function renderHome() {
 
   // Pregnancy-mode dashboard banner
   renderPregnancyHomeBanner();
+  // Household planner
+  renderHouseholdPlanner();
 
   // Update recipe ingredient matches based on actual pantry
   recipes.forEach(r => {
@@ -3419,6 +3468,68 @@ function togglePregnancyMode() {
   if (t && pregnancyMode) t.classList.add('on');
   const note = document.getElementById('preg-note');
   if (note) note.style.display = pregnancyMode ? 'block' : 'none';
+})();
+
+// ═══════════════════════════════════════════════════
+//  HOUSEHOLD FOOD PLANNER
+//  Uses household size + how long you want food to last
+//  to flag items that will spoil before your goal.
+// ═══════════════════════════════════════════════════
+let householdSize = parseInt(localStorage.getItem('kf_household') || '2', 10);
+let targetDays = parseInt(localStorage.getItem('kf_targetdays') || '7', 10);
+
+function changeHousehold(delta) {
+  householdSize = Math.max(1, Math.min(20, householdSize + delta));
+  localStorage.setItem('kf_household', String(householdSize));
+  const el = document.getElementById('hh-size'); if (el) el.textContent = householdSize;
+  renderHouseholdPlanner();
+}
+function setTargetDays(val) {
+  targetDays = parseInt(val, 10) || 7;
+  localStorage.setItem('kf_targetdays', String(targetDays));
+  const el = document.getElementById('hh-days-val'); if (el) el.textContent = targetDays + (targetDays === 1 ? ' day' : ' days');
+  renderHouseholdPlanner();
+}
+
+function renderHouseholdPlanner() {
+  const slot = document.getElementById('household-planner-slot');
+  if (!slot) return;
+  const total = pantryItems.length;
+  const people = householdSize + (householdSize === 1 ? ' person' : ' people');
+  if (total === 0) {
+    slot.innerHTML = `<div class="household-card">
+      <div class="hc-head"><span class="hc-title">\u{1F465} Household Food Planner</span>
+      <span class="hc-sub">${people} · goal ${targetDays} ${targetDays===1?'day':'days'}</span></div>
+      <div class="hc-stat hc-sub">Add items to your pantry and we'll show which ones to use first.</div></div>`;
+    return;
+  }
+  // Items that spoil before the target window (scaled by household: more people => shorter effective window)
+  const effectiveWindow = Math.max(1, Math.round(targetDays * (1 + (householdSize - 1) * 0.15)));
+  const atRisk = pantryItems.filter(i => i.expDays <= effectiveWindow).sort((a,b) => a.expDays - b.expDays);
+  const perPerson = (total / householdSize).toFixed(1);
+  const chips = atRisk.slice(0, 12).map(i => {
+    const d = i.expDays <= 0 ? 'expired' : i.expDays === 1 ? '1 day' : i.expDays + ' days';
+    return `<div class="hc-chip"><div class="e">${i.emoji}</div><div class="n">${i.name}</div><div class="d">${d}</div></div>`;
+  }).join('');
+  const riskLine = atRisk.length === 0
+    ? `Nothing expires within your ${targetDays}-day goal — you're covered. ✅`
+    : `<b>${atRisk.length}</b> of ${total} items won't last your ${targetDays}-day goal for ${people}. Use these first so nothing's wasted.`;
+  slot.innerHTML = `<div class="household-card">
+    <div class="hc-head">
+      <span class="hc-title">\u{1F465} Household Food Planner</span>
+      <span class="hc-sub">${people} · goal ${targetDays} ${targetDays===1?'day':'days'}</span>
+    </div>
+    <div class="hc-stat">${riskLine}</div>
+    <div class="hc-stat hc-sub">≈ ${perPerson} items per person in your pantry.</div>
+    ${atRisk.length ? `<div class="hc-chips">${chips}</div>` : ''}
+  </div>`;
+}
+
+// Restore household settings UI on load
+(function restoreHousehold() {
+  const s = document.getElementById('hh-size'); if (s) s.textContent = householdSize;
+  const sl = document.getElementById('hh-days-slider'); if (sl) sl.value = targetDays;
+  const dv = document.getElementById('hh-days-val'); if (dv) dv.textContent = targetDays + (targetDays === 1 ? ' day' : ' days');
 })();
 
 // ═══════════════════════════════════════════════════
