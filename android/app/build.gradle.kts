@@ -11,8 +11,8 @@ android {
         applicationId = "com.kitchenforge.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.5.0"
+        versionCode = 10
+        versionName = "1.6.0"
     }
 
     signingConfigs {
@@ -49,4 +49,4 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.webkit:webkit:1.10.0")
-}
+}
