@@ -45,6 +45,12 @@ COST TRACKING
 - See your total pantry value at a glance
 - Visual spending breakdown with progress bar
 
+PREGNANCY SAFETY MODE
+- Flags foods to avoid or limit during pregnancy across your pantry and recipes
+- Clear warnings for raw fish, soft cheese, deli meat, high-mercury fish, alcohol, excess caffeine and more
+- Recipe pages explain exactly which ingredients need caution and why
+- Based on public health guidance (NHS / ACOG / FDA); not a substitute for medical advice
+
 Download KitchenForge and start cooking smarter today.
 
 ----------------------------------------------------------------
@@ -54,7 +60,7 @@ PRICING: Free
 ----------------------------------------------------------------
 
 KEYWORDS (100 chars max):
-pantry tracker,recipe finder,food waste,meal planner,grocery,expiration,kitchen,ingredient,cook
+pantry tracker,recipe finder,food waste,meal planner,grocery,expiration,pregnancy,ingredient,cook
 
 ----------------------------------------------------------------
 SCREENSHOTS NEEDED (iPhone 6.7" and 6.1" required):
@@ -80,12 +86,4 @@ Notes for Reviewer:
   - The app works entirely offline with local storage
   - Camera permission is used for food scanning (optional)
   - Microphone permission is used for voice input (optional)
-  - No account creation or login required
-  - No in-app purchases
-  - All data stays on the device
-
-----------------------------------------------------------------
-PRIVACY POLICY URL: https://kitchenforge-app.netlify.app/privacy
-SUPPORT URL: https://kitchenforge-app.netlify.app
-MARKETING URL: https://kitchenforge-app.netlify.app
-================================================================
+  - No account creation or 

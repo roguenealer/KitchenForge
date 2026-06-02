@@ -48,6 +48,12 @@ ZERO WASTE
 - One-tap "Add missing items to shopping list"
 - Mark ingredients as used after cooking
 
+PREGNANCY SAFETY MODE
+- Turn it on and KitchenForge flags foods to AVOID or LIMIT during pregnancy
+- Clear warnings on pantry items and recipes (raw fish, soft cheese, deli meat, high-mercury fish, alcohol, excess caffeine and more)
+- Recipe pages show exactly which ingredients need caution and why
+- Based on public health guidance (NHS / ACOG / FDA) - not a substitute for your doctor's advice
+
 Download KitchenForge and start cooking smarter today.
 
 ───────────────────────────────────────────────────────
@@ -60,15 +66,9 @@ KEYWORDS / TAGS:
 pantry tracker, recipe finder, food waste, meal planner,
 grocery tracker, expiration tracker, kitchen organizer,
 recipe ideas, what to cook, food cost tracker,
-smart kitchen, meal prep, ingredient matcher
+smart kitchen, meal prep, ingredient matcher,
+pregnancy safe food, pregnancy nutrition
 
 ───────────────────────────────────────────────────────
 SCREENSHOTS NEEDED (take from the preview):
-1. Home dashboard with stats + spending tracker
-2. Pantry grid with cost labels and expiry dots
-3. Recipe cards with match percentages
-4. Recipe detail with ingredients checklist
-5. Cooking mode with timer
-6. Add Food screen (camera/voice/manual tabs)
-7. Settings with dark mode
-───────────────────────────────────────────────────────
+1. Hom
