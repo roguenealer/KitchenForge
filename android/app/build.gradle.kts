@@ -11,7 +11,7 @@ android {
         applicationId = "com.kitchenforge.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 8
+        versionCode = 9
         versionName = "1.5.0"
     }
 

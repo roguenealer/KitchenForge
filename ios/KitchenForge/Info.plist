@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchScreen</key>
@@ -53,7 +53,4 @@
 	<string>KitchenForge needs camera access to scan food items and import receipts for your pantry.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>KitchenForge needs microphone access for voice input when searching recipes and adding pantry items.</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-</dict>
-</plist>
+	<key>ITSAppUsesNonExemptEncryptio

@@ -24,7 +24,7 @@ SMART PANTRY TRACKING
 - Total pantry value always visible
 
 RECIPE MATCHING
-- 10+ recipes sorted by how many ingredients you already own
+- 40+ recipes sorted by how many ingredients you already own
 - Filter by cuisine: Italian, Asian, Indian, Mexican, Thai
 - Sort by best match, fastest cook time, or fewest missing items
 - Full step-by-step instructions with ingredient checklists
