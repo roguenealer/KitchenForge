@@ -53,4 +53,7 @@
 	<string>KitchenForge needs camera access to scan food items and import receipts for your pantry.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>KitchenForge needs microphone access for voice input when searching recipes and adding pantry items.</string>
-	<key>ITSAppUsesNonExemptEncryptio
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+</dict>
+</plist>

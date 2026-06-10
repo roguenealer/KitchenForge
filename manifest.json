@@ -1,7 +1,7 @@
 {
   "name": "KitchenForge - Smart Pantry & Recipes",
   "short_name": "KitchenForge",
-  "description": "Track your pantry, get recipe ideas from what you have, never waste food again. AI-powered food scanning, expiry alerts, and cost tracking.",
+  "description": "Track your pantry, get recipe ideas from what you have, never waste food again. AI-powered food scanning, expiry alerts, cost tracking, and Pregnancy Safety mode that flags foods to avoid or limit.",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",

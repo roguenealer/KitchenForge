@@ -1,6 +1,14 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) load(FileInputStream(f))
 }
 
 android {
@@ -11,16 +19,16 @@ android {
         applicationId = "com.kitchenforge.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 11
+        versionCode = 12
         versionName = "1.7.0"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("../kitchenforge-release.jks")
-            storePassword = "kitchenforge123"
-            keyAlias = "kitchenforge"
-            keyPassword = "kitchenforge123"
+            storeFile = file(keystoreProps.getProperty("storeFile", "../kitchenforge-upload.jks"))
+            storePassword = keystoreProps.getProperty("storePassword")
+            keyAlias = keystoreProps.getProperty("keyAlias", "kitchenforge")
+            keyPassword = keystoreProps.getProperty("keyPassword")
         }
     }
 

@@ -4,6 +4,8 @@ android/build/
 android/.gradle/
 android/local.properties
 *.keystore
+*.jks
+keystore.properties
 
 # iOS build artifacts
 ios/build/
