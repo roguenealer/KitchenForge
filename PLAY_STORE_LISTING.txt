@@ -2,40 +2,38 @@
   KITCHENFORGE - GOOGLE PLAY STORE LISTING
 ═══════════════════════════════════════════════════════
 
-APP NAME: KitchenForge - Smart Pantry & Recipes
+APP NAME: KitchenForge
 
 SHORT DESCRIPTION (80 chars max):
-Track food, get recipes from what you have, save money, waste nothing.
+Scan food and receipts, review suggestions, and keep your pantry up to date.
 
 FULL DESCRIPTION:
-KitchenForge is your personal kitchen assistant that tracks everything in your pantry, suggests recipes based on what you already have, and makes sure nothing goes to waste.
+KitchenForge helps you track your pantry, find recipes based on what you already have, and reduce food waste.
 
-ADD FOOD 4 EASY WAYS
+ADD AND UPDATE FOOD
 - Camera or Photo Library: Photograph one food or its label to get a food suggestion, processed on your phone
 - Receipt Photo: Read common grocery names from a receipt, then review quantities, prices, and expiry estimates
 - Review and Save: Edit suggestions, add a new pantry item, or update the quantity of a matching existing item
-- Voice: Say "Add milk that expires in 7 days" and it's done
+- Voice: Add items by speaking where your device supports voice input
 - Manual: Quick-add with name, quantity, cost, and expiry
 
 SMART PANTRY TRACKING
-- See all 47+ items at a glance with beautiful cards
+- See your items at a glance with pantry cards
 - Color-coded expiry indicators (red/yellow/green)
 - Search and filter by category (Produce, Dairy, Meat, Frozen)
 - Edit quantities, costs, and expiry dates with one tap
 - Total pantry value always visible
 
 RECIPE MATCHING
-- 40+ recipes sorted by how many ingredients you already own
+- Recipes sorted by how many ingredients you already own
 - Filter by cuisine: Italian, Asian, Indian, Mexican, Thai
 - Sort by best match, fastest cook time, or fewest missing items
 - Full step-by-step instructions with ingredient checklists
 - Start Cooking mode with built-in timer and checkable steps
 
 EXPIRATION RADAR
-- Push notifications before food expires
-- Customizable reminder window (1-7 days before)
+- View items nearing expiry on your dashboard
 - "Expiring This Week" carousel on your dashboard
-- Recipe suggestions that use expiring items first
 
 COST TRACKING
 - Track the cost of every item you add

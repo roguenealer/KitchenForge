@@ -2,7 +2,7 @@
   KITCHENFORGE - APPLE APP STORE LISTING
 ================================================================
 
-APP NAME: KitchenForge - Smart Pantry & Recipes
+APP NAME: KitchenForge
 
 SUBTITLE (30 chars max):
 Track Food, Waste Nothing
@@ -11,17 +11,17 @@ PROMOTIONAL TEXT (170 chars max):
 Take a food or receipt photo, review suggested groceries, and update your pantry. Photo recognition happens on your iPhone. Find recipes using what you already have.
 
 DESCRIPTION:
-KitchenForge is your personal kitchen assistant that tracks everything in your pantry, suggests recipes based on what you already have, and makes sure nothing goes to waste.
+KitchenForge helps you track your pantry, find recipes based on what you already have, and reduce food waste.
 
-ADD FOOD 4 EASY WAYS
+ADD AND UPDATE FOOD
 - Camera or Photo Library: Photograph one food or its label to get a food suggestion, processed on your phone
 - Receipt Photo: Read common grocery names from a receipt, then review quantities, prices, and expiry estimates
 - Review and Save: Edit suggestions, add a new pantry item, or update the quantity of a matching existing item
-- Voice: Say "Add milk that expires in 7 days" and it's done
+- Voice: Add items by speaking where your device supports voice input
 - Manual: Quick-add with name, quantity, cost, and expiry
 
 SMART PANTRY TRACKING
-- See all your items at a glance with beautiful cards
+- See your items at a glance with pantry cards
 - Color-coded expiry indicators (red/yellow/green)
 - Search and filter by category (Produce, Dairy, Meat, Frozen)
 - Edit quantities, costs, and expiry dates with one tap
@@ -35,10 +35,8 @@ RECIPE MATCHING
 - Start Cooking mode with built-in timer and checkable steps
 
 EXPIRATION RADAR
-- Notifications before food expires
-- Customizable reminder window (1-7 days before)
+- View items nearing expiry on your dashboard
 - "Expiring This Week" carousel on your dashboard
-- Recipe suggestions that use expiring items first
 
 COST TRACKING
 - Track the cost of every item you add
@@ -84,8 +82,8 @@ APP REVIEW INFORMATION:
 
 Demo Account: Not required (app works without login)
 Notes for Reviewer:
-  - The app works entirely offline with local storage
+  - Pantry storage and photo recognition work locally; online recipe searches and images require internet access
   - Camera permission is used for food scanning (optional)
-  - Microphone permission is used for voice input (optional)
+  - Voice input is optional and available where supported; the platform or browser speech service may require internet access
   - No account creation is required
   - Photo results are suggestions; review quantities, costs and expiry before saving
