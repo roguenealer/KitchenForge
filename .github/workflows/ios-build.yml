@@ -1,0 +1,62 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Test photo scanning and pantry updates
+        run: node --test tests/*.test.cjs
+
+      - name: Verify bundled iOS web assets
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const assets = ['index.html', 'photo-scan.js', 'photo-ui.js', 'manifest.json', 'sw.js', 'icon-192.png', 'icon-512.png'];
+          for (const file of assets) {
+            const source = fs.readFileSync(file);
+            const bundled = fs.readFileSync('ios/KitchenForge/www/' + file);
+            if (file.endsWith('.png')) {
+              assert.ok(source.equals(bundled), 'iOS asset differs from source: ' + file);
+            } else {
+              assert.equal(bundled.toString('utf8').replace(/\r\n/g, '\n'), source.toString('utf8').replace(/\r\n/g, '\n'), 'iOS asset differs from source: ' + file);
+            }
+          }
+          console.log('All bundled iOS web assets match their sources.');
+          NODE
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Compile Release app for iOS Simulator
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -project KitchenForge.xcodeproj \
+            -scheme KitchenForge \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
