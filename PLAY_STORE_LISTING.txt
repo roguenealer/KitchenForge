@@ -11,8 +11,9 @@ FULL DESCRIPTION:
 KitchenForge is your personal kitchen assistant that tracks everything in your pantry, suggests recipes based on what you already have, and makes sure nothing goes to waste.
 
 ADD FOOD 4 EASY WAYS
-- Camera Scan: Point at your fridge and AI detects every item
-- Receipt Photo: Snap your grocery receipt to import items instantly
+- Camera or Photo Library: Photograph one food or its label to get a food suggestion, processed on your phone
+- Receipt Photo: Read common grocery names from a receipt, then review quantities, prices, and expiry estimates
+- Review and Save: Edit suggestions, add a new pantry item, or update the quantity of a matching existing item
 - Voice: Say "Add milk that expires in 7 days" and it's done
 - Manual: Quick-add with name, quantity, cost, and expiry
 

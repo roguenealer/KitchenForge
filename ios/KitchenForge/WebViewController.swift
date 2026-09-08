@@ -2,9 +2,12 @@ import UIKit
 import WebKit
 import AVFoundation
 
-class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
+class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
 
     private var webView: WKWebView!
+    private var bundledAppURL: URL?
+    private lazy var photoScanner = PhotoScanner(presenter: self)
+    private let scannerMessageName = "kitchenForgeScanner"
 
     // MARK: - Lifecycle
 
@@ -38,6 +41,9 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         let preferences = WKPreferences()
         preferences.javaScriptCanOpenWindowsAutomatically = true
         config.preferences = preferences
+        // WKUserContentController retains its handlers. The proxy keeps the
+        // controller and scanner from being kept alive after this screen closes.
+        config.userContentController.add(WeakScriptMessageHandler(self), name: scannerMessageName)
 
         webView = WKWebView(frame: view.bounds, configuration: config)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -63,6 +69,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         // Method 1: Try www subdirectory (postCompileScript copy)
         if let url = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "www") {
             let directory = url.deletingLastPathComponent()
+            bundledAppURL = url
             webView.loadFileURL(url, allowingReadAccessTo: directory)
             return
         }
@@ -70,6 +77,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         // Method 2: Try bundle root (group reference)
         if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
             let directory = Bundle.main.bundleURL
+            bundledAppURL = url
             webView.loadFileURL(url, allowingReadAccessTo: directory)
             return
         }
@@ -86,6 +94,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
             let fileURL = URL(fileURLWithPath: path)
             if FileManager.default.fileExists(atPath: path) {
                 let directory = fileURL.deletingLastPathComponent()
+                bundledAppURL = fileURL
                 webView.loadFileURL(fileURL, allowingReadAccessTo: directory)
                 return
             }
@@ -140,9 +149,9 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
             return
         }
 
-        // Allow local file URLs
+        // Keep native capabilities confined to the bundled app document.
         if url.isFileURL {
-            decisionHandler(.allow)
+            decisionHandler(isBundledAppURL(url) ? .allow : .cancel)
             return
         }
 
@@ -210,6 +219,11 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
                  initiatedByFrame frame: WKFrameInfo,
                  type: WKMediaCaptureType,
                  decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+        guard frame.isMainFrame, isBundledAppURL(frame.request.url),
+              isBundledAppURL(webView.url) else {
+            decisionHandler(.deny)
+            return
+        }
         // Grant camera/microphone access for food scanning and voice input
         switch type {
         case .camera:
@@ -229,6 +243,41 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         @unknown default:
             decisionHandler(.deny)
         }
+    }
+
+    // MARK: - Native Photo Scanning
+
+    private func isBundledAppURL(_ url: URL?) -> Bool {
+        guard let url = url, url.isFileURL, let bundledAppURL = bundledAppURL else { return false }
+        return url.standardizedFileURL.resolvingSymlinksInPath().path ==
+            bundledAppURL.standardizedFileURL.resolvingSymlinksInPath().path
+    }
+
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        guard message.name == scannerMessageName, message.webView === webView,
+              message.frameInfo.isMainFrame, isBundledAppURL(message.frameInfo.request.url),
+              isBundledAppURL(webView.url), let body = message.body as? [String: Any],
+              let requestID = body["requestId"] as? String, !requestID.isEmpty,
+              requestID.count <= 128 else { return }
+        guard let source = body["source"] as? String, ["camera", "library"].contains(source),
+              let mode = body["mode"] as? String, ["food", "receipt"].contains(mode) else {
+            deliverScanResult(["requestId": requestID, "text": "", "labels": [],
+                               "error": "Choose a camera or photo-library scan and try again."])
+            return
+        }
+        photoScanner.scan(requestID: requestID, source: source, mode: mode) { [weak self] payload in
+            self?.deliverScanResult(payload)
+        }
+    }
+
+    private func deliverScanResult(_ payload: [String: Any]) {
+        guard isBundledAppURL(webView.url) else { return }
+        // Pass OCR text as a JavaScript argument instead of interpolating it
+        // into executable source; a photographed string is untrusted input.
+        webView.callAsyncJavaScript(
+            "if (typeof window.onKitchenForgeScanResult === 'function') { window.onKitchenForgeScanResult(result); }",
+            arguments: ["result": payload], in: nil, in: .page, completionHandler: nil)
     }
 
     // MARK: - Permission Helpers
@@ -257,5 +306,19 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         default:
             completion(false)
         }
+    }
+}
+
+private final class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
+    private weak var delegate: WKScriptMessageHandler?
+
+    init(_ delegate: WKScriptMessageHandler) {
+        self.delegate = delegate
+        super.init()
+    }
+
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        delegate?.userContentController(userContentController, didReceive: message)
     }
 }

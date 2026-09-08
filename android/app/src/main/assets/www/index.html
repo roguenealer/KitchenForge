@@ -764,6 +764,17 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
 .hc-chip .e { font-size:18px; }
 .hc-chip .n { font-weight:600; white-space:nowrap; }
 .hc-chip .d { color:var(--danger); font-size:11px; }
+.photo-actions { display:flex; gap:10px; margin-top:14px; }
+.photo-actions button { flex:1; padding:14px 10px; border-radius:12px; background:var(--primary); color:white; font-weight:700; }
+.photo-actions button:disabled { opacity:.5; }
+.scan-status { margin:12px 20px; line-height:1.5; font-size:14px; color:var(--primary-dark); }
+.review-note { font-size:12px; line-height:1.5; color:var(--text-secondary); margin-top:10px; }
+.photo-review-item { margin:12px 20px; padding:16px; background:var(--surface); border:1px solid var(--border); border-radius:14px; }
+.review-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; font-size:13px; }
+.review-heading button { color:var(--danger); padding:8px; }
+.photo-review-item label { display:block; min-width:0; font-size:12px; color:var(--text-secondary); margin-top:10px; }
+.photo-review-item input,.photo-review-item select { width:100%; margin-top:5px; padding:11px; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:16px; background:var(--surface); color:var(--text); }
+.review-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 </style>
 </head>
 <body>
@@ -960,28 +971,16 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
   </div>
 
   <div class="method-content">
-    <!-- Camera Panel -->
+    <!-- Photos are processed by the native iOS/Android scanner. -->
     <div class="method-panel active" id="panel-camera">
-      <div class="camera-area" id="camera-area" onclick="startCamera()">
-        <div class="icon">&#x1F4F8;</div>
-        <p><strong>Tap to open camera</strong></p>
-        <p style="font-size:12px;margin-top:4px;">Point at your food items to scan them</p>
-      </div>
-      <div id="camera-preview" style="display:none;">
-        <video id="camera-video" autoplay playsinline muted style="width:100%;border-radius:16px;background:#000;max-height:300px;object-fit:cover;"></video>
-        <div class="cam-controls">
-          <button class="cam-btn" onclick="capturePhoto()" style="background:var(--primary);color:white;">&#x1F4F8; Capture &amp; Scan</button>
-          <button class="cam-btn" onclick="stopCamera()" style="background:var(--danger-light);color:var(--danger);">&#x2715; Close</button>
-        </div>
-      </div>
+      <div class="camera-area"><div class="icon">📸</div><p><strong>Photo to pantry</strong></p><p>Take a close-up of one food or its label, then review what we find.</p></div>
+      <div class="photo-actions"><button data-photo-scan onclick="requestPhotoScan('camera','food')">Take a picture</button><button data-photo-scan onclick="requestPhotoScan('library','food')">Choose a photo</button></div>
+      <p class="review-note">Photos stay on your phone. Labels and receipts work best; recognition may miss foods.</p>
     </div>
-    <!-- Receipt Panel -->
     <div class="method-panel" id="panel-receipt">
-      <div class="receipt-area" onclick="simulateReceipt()">
-        <div class="icon">&#x1F9FE;</div>
-        <p><strong>Tap to scan receipt</strong></p>
-        <p style="font-size:12px;margin-top:4px;">AI reads every item with quantities</p>
-      </div>
+      <div class="receipt-area"><div class="icon">🧾</div><p><strong>Read a grocery receipt</strong></p><p>Photograph the item names in good light. Review suggestions before saving.</p></div>
+      <div class="photo-actions"><button data-photo-scan onclick="requestPhotoScan('camera','receipt')">Take receipt photo</button><button data-photo-scan onclick="requestPhotoScan('library','receipt')">Choose receipt</button></div>
+      <p class="review-note">Common food names are suggested. Quantities and prices need your review.</p>
     </div>
     <!-- Voice Panel -->
     <div class="method-panel" id="panel-voice">
@@ -1016,6 +1015,7 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
     </div>
   </div>
 
+  <p id="scan-status" class="scan-status" role="status" aria-live="polite"></p>
   <div class="added-items-list" id="added-items-list"></div>
   <button class="save-pantry-btn" id="save-pantry-btn" onclick="saveToPantry()" disabled>
     Save to Pantry
@@ -1148,7 +1148,7 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
     </div>
 
     <div style="text-align:center;padding:20px;font-size:12px;color:var(--text-light);">
-      KitchenForge v1.7.0<br>Made with &#x2764;&#xFE0F; for zero food waste
+      KitchenForge v1.8.0<br>Made with &#x2764;&#xFE0F; for zero food waste
     </div>
   </div>
 </section>
@@ -1260,6 +1260,7 @@ body.dark .preg-home-banner { background:#2a1f25; border-color:#4a3540; }
   </button>
 </nav>
 
+<script src="photo-scan.js"></script>
 <script>
 // ═══════════════════════════════════════════════════
 //  DATA (localStorage-backed)
@@ -1323,21 +1324,12 @@ const spendingLog = JSON.parse(localStorage.getItem('kf_spending') || '[]');
 
 // Recalculate expDays based on addedDate so expiry counts down over time
 function recalcExpiry() {
-  const now = new Date();
-  now.setHours(0,0,0,0);
+  const today = KitchenForgePhoto.calendarDay(KitchenForgePhoto.localDate());
   pantryItems.forEach(item => {
-    if (item.addedDate && item._origExpDays !== undefined) {
-      const added = new Date(item.addedDate);
-      added.setHours(0,0,0,0);
-      const expDate = new Date(added.getTime() + item._origExpDays * 86400000);
-      item.expDays = Math.ceil((expDate - now) / 86400000);
-    } else if (item.addedDate && item.expDays !== undefined) {
-      // First time: store original shelf life, then compute remaining
-      item._origExpDays = item.expDays;
-      const added = new Date(item.addedDate);
-      added.setHours(0,0,0,0);
-      const expDate = new Date(added.getTime() + item._origExpDays * 86400000);
-      item.expDays = Math.ceil((expDate - now) / 86400000);
+    const added = KitchenForgePhoto.calendarDay(item.addedDate);
+    if (Number.isFinite(added) && item.expDays !== undefined) {
+      if (item._origExpDays === undefined) item._origExpDays = item.expDays;
+      item.expDays = item._origExpDays - (today - added);
     }
   });
 }
@@ -2090,7 +2082,6 @@ let selectedExpiry = 7;
 let timerInterval = null;
 let timerSeconds = 0;
 let timerRunning = false;
-let cameraStream = null;
 let shoppingList = JSON.parse(localStorage.getItem('kf_shopping') || '[]');
 
 // ═══════════════════════════════════════════════════
@@ -2123,7 +2114,7 @@ function renderHome() {
     const daysText = item.expDays <= 0 ? 'Expired!' : item.expDays === 1 ? '1 day left' : item.expDays + ' days left';
     return `<div class="expiry-card ${color}">
       <div class="emoji">${item.emoji}${pregBadge(item.name)}</div>
-      <div class="name">${item.name}</div>
+      <div class="name">${KitchenForgePhoto.escape(item.name)}</div>
       <div class="days">${daysText}</div>
     </div>`;
   }).join('');
@@ -2198,8 +2189,8 @@ function renderPantry() {
         <span class="emoji">${item.emoji}</span>
         <span style="display:flex;align-items:center;">${pregBadge(item.name)}<span class="expiry-dot ${color}"></span></span>
       </div>
-      <div class="item-name">${item.name}</div>
-      <div class="item-qty">${item.qty} ${item.unit}</div>
+      <div class="item-name">${KitchenForgePhoto.escape(item.name)}</div>
+      <div class="item-qty">${item.qty} ${KitchenForgePhoto.escape(item.unit)}</div>
       <div class="item-exp">${expText}</div>
     </div>`;
   }).join('');
@@ -2440,81 +2431,8 @@ function switchMethodTab(idx) {
   document.querySelectorAll('.method-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
 }
 
-const aiDetectedItems = [
-  {name:"Almond Milk",emoji:"\u{1F95B}",qty:1,unit:"L",expDays:7},
-  {name:"Greek Yogurt",emoji:"\u{1F95B}",qty:2,unit:"cups",expDays:10},
-  {name:"Strawberries",emoji:"\u{1F353}",qty:1,unit:"box",expDays:4},
-  {name:"Cucumber",emoji:"\u{1F952}",qty:2,unit:"pcs",expDays:6},
-  {name:"Hummus",emoji:"\u{1F957}",qty:1,unit:"tub",expDays:12},
-];
+// Photo capture and review live in photo-ui.js.
 
-// ═══════════════════════════════════════════════════
-//  CAMERA (Real getUserMedia)
-// ═══════════════════════════════════════════════════
-function startCamera() {
-  const area = document.getElementById('camera-area');
-  const preview = document.getElementById('camera-preview');
-  const video = document.getElementById('camera-video');
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    showToast('Camera not available on this device');
-    return;
-  }
-
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
-    .then(stream => {
-      cameraStream = stream;
-      video.srcObject = stream;
-      area.style.display = 'none';
-      preview.style.display = 'block';
-    })
-    .catch(err => {
-      console.log('Camera error:', err);
-      showToast('Camera access denied. Check permissions!');
-    });
-}
-
-function capturePhoto() {
-  const video = document.getElementById('camera-video');
-  showToast('AI scanning your items...');
-  stopCamera();
-  // Simulate AI detection after capture
-  setTimeout(() => {
-    addedItems = [...aiDetectedItems.slice(0,3)];
-    addedItems.forEach(item => {
-      const sl = getShelfLife(item.name);
-      if (sl) item.expDays = sl;
-    });
-    renderAddedItems();
-    showToast('Found 3 items!');
-  }, 1500);
-}
-
-function stopCamera() {
-  if (cameraStream) {
-    cameraStream.getTracks().forEach(t => t.stop());
-    cameraStream = null;
-  }
-  const video = document.getElementById('camera-video');
-  video.srcObject = null;
-  document.getElementById('camera-area').style.display = '';
-  document.getElementById('camera-preview').style.display = 'none';
-}
-
-function simulateReceipt() {
-  showToast('Scanning receipt...');
-  setTimeout(() => {
-    addedItems = [...aiDetectedItems];
-    addedItems.forEach(item => {
-      const sl = getShelfLife(item.name);
-      if (sl) item.expDays = sl;
-    });
-    renderAddedItems();
-    showToast('Found 5 items from receipt!');
-  }, 1500);
-}
-
-// ═══════════════════════════════════════════════════
 //  VOICE RECOGNITION (Real Web Speech API)
 // ═══════════════════════════════════════════════════
 function startVoiceRecognition() {
@@ -2680,59 +2598,6 @@ function removeAddedItem(idx) {
   addedItems.splice(idx, 1);
   renderAddedItems();
 }
-function renderAddedItems() {
-  const list = document.getElementById('added-items-list');
-  const btn = document.getElementById('save-pantry-btn');
-  btn.disabled = addedItems.length === 0;
-  btn.textContent = addedItems.length > 0 ? `Save ${addedItems.length} items to Pantry` : 'Save to Pantry';
-  list.innerHTML = addedItems.map((item, i) => `
-    <div class="added-item">
-      <div class="left">
-        <span class="emoji">${item.emoji}</span>
-        <div class="details">
-          <div class="name">${item.name}</div>
-          <div class="qty">${item.qty} ${item.unit} \u2022 ${item.expDays}d${item.cost ? ' \u2022 $'+item.cost.toFixed(2) : ''}</div>
-        </div>
-      </div>
-      <button class="remove-btn" onclick="removeAddedItem(${i})">\u2715</button>
-    </div>
-  `).join('');
-}
-function saveToPantry() {
-  if (addedItems.length === 0) return;
-  const count = addedItems.length;
-  let batchCost = 0;
-  const today = new Date().toISOString().slice(0,10);
-  addedItems.forEach(item => {
-    pantryItems.push({
-      id: Date.now() + Math.random(),
-      name: item.name, emoji: item.emoji,
-      qty: item.qty, unit: item.unit,
-      cat: item.cat || detectCategory(item.name), expDays: item.expDays,
-      cost: item.cost || 0, addedDate: today
-    });
-    batchCost += (item.cost || 0);
-  });
-  if (batchCost > 0) {
-    const existingEntry = spendingLog.find(e => e.date === today);
-    if (existingEntry) {
-      existingEntry.total += batchCost;
-      existingEntry.items.push(...addedItems.map(i => i.name));
-    } else {
-      spendingLog.unshift({date: today, items: addedItems.map(i => i.name), total: batchCost});
-    }
-  }
-  addedItems = [];
-  renderAddedItems();
-  document.getElementById('total-items').textContent = pantryItems.length;
-  showToast(count + ' items saved — $' + batchCost.toFixed(2) + ' added!');
-  renderHome();
-  renderPantry();
-  savePantryData();
-  setTimeout(() => navigateTo('pantry'), 800);
-}
-
-// ═══════════════════════════════════════════════════
 //  EDIT PANTRY ITEM
 // ═══════════════════════════════════════════════════
 let editingItemId = null;
@@ -2818,17 +2683,15 @@ function deleteEditItem() {
 //  SPENDING TRACKER
 // ═══════════════════════════════════════════════════
 function renderSpending() {
-  const today = new Date().toISOString().slice(0,10);
-  const now = new Date();
-  const weekAgo = new Date(now); weekAgo.setDate(now.getDate() - 7);
-  const monthAgo = new Date(now); monthAgo.setDate(now.getDate() - 30);
+  const today = KitchenForgePhoto.localDate();
+  const todayDay = KitchenForgePhoto.calendarDay(today);
 
   let todayTotal = 0, weekTotal = 0, monthTotal = 0;
   spendingLog.forEach(entry => {
-    const d = new Date(entry.date);
+    const age = todayDay - KitchenForgePhoto.calendarDay(entry.date);
     if (entry.date === today) todayTotal += entry.total;
-    if (d >= weekAgo) weekTotal += entry.total;
-    if (d >= monthAgo) monthTotal += entry.total;
+    if (age >= 0 && age < 7) weekTotal += entry.total;
+    if (age >= 0 && age < 30) monthTotal += entry.total;
   });
 
   document.getElementById('spend-today').textContent = '$' + todayTotal.toFixed(2);
@@ -3568,5 +3431,6 @@ function installApp() {
   });
 }
 </script>
+<script src="photo-ui.js"></script>
 </body>
 </html>

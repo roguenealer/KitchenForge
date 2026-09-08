@@ -14,26 +14,27 @@ p, li { font-size: 15px; }
 </head>
 <body>
 <h1>KitchenForge Privacy Policy</h1>
-<p class="updated">Last updated: March 2, 2026</p>
+<p class="updated">Last updated: September 8, 2026</p>
 
 <h2>Overview</h2>
 <p>KitchenForge ("the App") is a food pantry management and recipe discovery application. We are committed to protecting your privacy. This policy explains what data the App accesses and how it is used.</p>
 
 <h2>Data Collection</h2>
-<p><strong>KitchenForge does not collect, store, or transmit any personal data to external servers.</strong> All pantry items, recipes, preferences, and spending data are stored locally on your device only.</p>
+<p>Pantry items, preferences, spending data, and photo-recognition results are stored locally on your device. KitchenForge does not upload your food or receipt photos. The Android scanner uses Google ML Kit, which collects the diagnostic information described below.</p>
 
 <h2>Permissions Used</h2>
 <ul>
-<li><strong>Camera:</strong> Used only to scan food items when you choose to use the camera feature. Camera images are processed on-device and are never uploaded, stored, or shared.</li>
+<li><strong>Camera and selected photos:</strong> Used only when you take a photo or choose an image to read food labels or receipts. Recognition runs on-device. On Android, a captured photo is kept in a temporary private cache file while it is processed and deleted when the scan finishes or is cancelled. The app does not upload photos or save captured photos to your gallery. Choosing a library image grants access to that selected image, not your entire library.</li>
 <li><strong>Microphone:</strong> Used only for voice-to-text input when you choose to add items by speaking. Audio is processed by your device's built-in speech recognition and is never recorded, stored, or transmitted by the App.</li>
-<li><strong>Internet:</strong> Used to search for online recipes from TheMealDB, a free recipe database. No personal information is sent in these requests.</li>
+<li><strong>Internet:</strong> Used for online recipes, web fonts, and Android scanner diagnostics. Food and receipt photos are not sent to a recognition server.</li>
 </ul>
 
 <h2>Third-Party Services</h2>
-<p>The App uses <strong>TheMealDB API</strong> (themealdb.com) to provide online recipe search and discovery. When you search for recipes, only your search query is sent to TheMealDB. No personal information, device identifiers, or usage data is transmitted.</p>
+<p>The App uses <strong>TheMealDB API</strong> (themealdb.com) for recipe searches and images. Search terms and ordinary connection information, such as your IP address, are visible to that provider. Web fonts are loaded from Google Fonts.</p>
+<p><strong>Android photo recognition:</strong> Bundled Google ML Kit text recognition and image labeling process photos locally. The SDK collects device and app information, per-installation identifiers, performance metrics, configuration and image dimensions, input/output sizes, feature events, and error codes for diagnostics and usage analytics. This diagnostic data is encrypted in transit. See <a href="https://developers.google.com/ml-kit/android-data-disclosure">Google's ML Kit data disclosure</a>. The iOS scanner uses Apple's on-device Vision framework.</p>
 
 <h2>Data Storage</h2>
-<p>All app data (pantry items, spending history, preferences) is stored locally on your device using browser local storage. This data is not backed up to any cloud service and is only accessible by the App on your device.</p>
+<p>Pantry items, spending history, preferences, and unfinished photo-review drafts are kept in local app storage. KitchenForge does not provide a cloud account or pantry-sync service. Device backups may include app data according to your operating system and backup settings. The Android app retains a local recovery copy when upgrading older pantry storage.</p>
 
 <h2>Children's Privacy</h2>
 <p>KitchenForge does not knowingly collect information from children under 13. The App does not require account creation or personal information of any kind.</p>

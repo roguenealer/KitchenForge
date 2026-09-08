@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kitchenforge-v1';
-const ASSETS = ['/', '/index.html'];
+const CACHE_NAME = 'kitchenforge-v1.8.0';
+const ASSETS = ['./', './index.html', './photo-scan.js', './photo-ui.js', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
@@ -8,7 +8,7 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    Promise.all(keys.filter(k => k.startsWith('kitchenforge-') && k !== CACHE_NAME).map(k => caches.delete(k)))
   ));
   self.clients.claim();
 });

@@ -2,6 +2,11 @@
   KITCHENFORGE iOS - BUILD & PUBLISH GUIDE
 ================================================================
 
+CURRENT RELEASE: See ../RELEASE-1.8.0.md for the existing-app update workflow.
+The app already exists in App Store Connect (Apple ID 6761285586).
+Do not create another app record using the older first-release steps below.
+Use Xcode 26+ with the iOS 26 SDK; Codemagic is configured for Xcode 26.6.
+
 IMPORTANT: You need a Mac to build and submit iOS apps.
 If you don't have a Mac, see "OPTION B: No Mac" below.
 
@@ -19,7 +24,7 @@ If you don't have a Mac, see "OPTION B: No Mac" below.
 
 2. A Mac with Xcode installed
    - Download Xcode from the Mac App Store (free)
-   - Xcode 15+ recommended
+   - Xcode 26+ required for current App Store submissions
 
 3. XcodeGen (generates the .xcodeproj file)
    - Install: brew install xcodegen
