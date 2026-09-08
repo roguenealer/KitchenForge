@@ -11,9 +11,9 @@ read reliable expiry dates, or automatically trust receipt prices.
 
 - Android: version 1.8.0 / versionCode 13, compile/target SDK 36. Signed APK and AAB
   generated locally; store upload still needs Google Play Console access.
-- iOS: version 1.8.0 / build 15. Source and Codemagic Xcode 26.6 configuration
-  prepared. No iOS binary has been compiled on this Windows host. Codemagic and
-  App Store Connect sign-in are required to build, sign, upload, and submit.
+- iOS: version 1.8.0 / build 15. Native unsigned Release simulator compilation
+  passed on GitHub's macOS runner with Xcode 26.6. Codemagic and App Store Connect
+  sign-in are still required to produce a signed IPA, upload, and submit.
 - These numbers exceed the local previous build numbers. Compare with all uploaded
   builds (including TestFlight and draft Play releases) before upload; those records
   are not accessible while the store accounts are signed out.
@@ -22,12 +22,14 @@ read reliable expiry dates, or automatically trust receipt prices.
 
 ## Validation
 
-- `node --test tests/*.test.cjs`: parser plus actual UI/save/reload integration tests.
+- `node --test tests/*.test.cjs`: all 23 parser and UI/save/reload tests passed.
 - 390 x 844 browser check with a synthetic native callback: review, edit quantity
   and cost, save, and reload. Expiry and spending survived correctly.
 - Android release build, lint, signature and 16 KB native-library/package checks.
-- Native iOS compilation, camera/picker behavior on physical iOS/Android phones,
-  and Android upgrade of real existing pantry storage still need device validation.
+- [Native iOS Release simulator build passed](https://github.com/roguenealer/KitchenForge/actions/runs/34267888675)
+  for commit 05000dc, including tests, asset equality, and XcodeGen generation.
+- Camera/picker behavior on physical iOS/Android phones and Android upgrade of
+  real existing pantry storage still need device validation.
 
 ## Store release notes
 
