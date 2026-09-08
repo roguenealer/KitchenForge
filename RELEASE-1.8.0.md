@@ -9,27 +9,40 @@ read reliable expiry dates, or automatically trust receipt prices.
 
 ## Release status
 
+- Account sign-ins were verified for Google Play Console, App Store Connect,
+  and Codemagic. Neither store has accepted or published the version 1.8.0 binary.
 - Android: version 1.8.0 / versionCode 13, compile/target SDK 36. Signed APK and AAB
-  generated locally. Google Play Console requires account sign-in;
-  no upload or store submission has been completed.
-- iOS: version 1.8.0 / build 15. Native unsigned Release simulator compilation
-  passed on GitHub's macOS runner with Xcode 26.6. App Store Connect sign-in works.
-  Version 1.3.0 is Ready for Distribution, and the highest build displayed in
-  TestFlight is version 1.3.0 / build 10. Creating version 1.8.0 is blocked until
-  the Account Holder accepts the updated Apple Developer Program License Agreement.
-- Codemagic remains at GitHub login. No signed IPA, TestFlight upload, or App Store
-  submission for version 1.8.0 has been completed.
-- Build 15 exceeds the highest TestFlight build displayed in this check. Recheck
-  all uploaded builds before upload. The latest Play version code and draft
-  releases cannot yet be inspected because Play Console is signed out.
-- Store descriptions and privacy-policy source have been corrected locally;
-  store metadata and privacy registrations have not yet been updated.
+  generated locally. The current Alpha release is version code 8 / version 1.5.0.
+  Existing draft release 8 was renamed `13 (1.8.0)` and its release notes saved;
+  no AAB has been uploaded. The upload tool rejected local file access because
+  Kimi's `Allow access to file URLs` permission is disabled.
+- Google Play default listing changes are saved as drafts: 76-character short
+  description and 2,129-character full description. Privacy URL and Data safety
+  declarations remain unchanged. Public production access is unavailable: five
+  testers are opted in, while the Console requires 12 testers for 14 days.
+- iOS: Codemagic build 25 (`6aa0646d59aa6d5fb03828cd`), source commit `1630e0f`,
+  built and signed an App Store IPA for version 1.8.0 / build 15 with team
+  `GU2N42K3AB`. Upload then failed with an Apple ID lookup error for bundle
+  `com.kitchenforge.app` on iOS. App Store Connect app `6761285586` was checked
+  and does use that bundle ID. No TestFlight upload or review submission succeeded.
+- App Store Connect still shows version 1.3.0 Ready for Distribution; the highest
+  TestFlight build displayed was 1.3.0 / build 10. Creating version 1.8.0 remains
+  blocked by the updated Apple Developer Program License Agreement. Account Holder
+  acceptance is pending. No App Store version 1.8.0 has been created.
+- The signed IPA was independently checked and copied to the release folder as
+  `KitchenForge-1.8.0.ipa`. Its SHA-256 is
+  `c462f00a8c3b41f550fe113ae137112bd48c5de3b7272fae277ed01668d4f972`.
+- After these checks, all browser bridge group tabs were closed. The stale bridge
+  session refuses navigation and needs reconnection before browser work resumes.
 - The registered Apple privacy URL,
   `https://kitchenforge-app.netlify.app/privacy`, currently returns HTTP 404.
   `PRIVACY.md` was published and verified publicly readable on September 8, 2026:
   <https://github.com/roguenealer/KitchenForge/blob/master/PRIVACY.md>.
   This fallback is ready to register in the stores; its store acceptance has
   not been established.
+
+Google Play record: developer `4864288477058767887`, app `4973182410710576233`,
+existing closed track `4699450976667166916`. Continue in these existing records.
 
 ## Validation
 
@@ -39,6 +52,9 @@ read reliable expiry dates, or automatically trust receipt prices.
 - Android release build, lint, signature and 16 KB native-library/package checks.
 - [Native iOS Release simulator build passed](https://github.com/roguenealer/KitchenForge/actions/runs/34267888675)
   for commit 05000dc, including tests, asset equality, and XcodeGen generation.
+- Codemagic build 25 produced the signed App Store IPA. Release artifact review
+  checked packaged resources, code-signature CMS signer, and provisioning profile.
+  Successful building/signing did not result in an Apple upload.
 - Camera/picker behavior on physical iOS/Android phones and Android upgrade of
   real existing pantry storage still need device validation.
 
@@ -56,24 +72,27 @@ Improved expiry dates, draft recovery, and Android compatibility.
    native recovery copy are retained.
 2. Test camera permission allowed/denied, cancel, gallery/HEIC rotation, blank
    image, food label, receipt, background/process restoration, and offline scans.
-3. Sign in to Play Console, then use the existing `com.kitchenforge.app` record.
-   Check current uploaded version codes and signing identity before uploading the
-   AAB to the existing testing track.
-4. Update the listing from PLAY_STORE_LISTING.txt, restore the registered privacy
+3. Reconnect the browser bridge and enable Kimi's `Allow access to file URLs`
+   permission before retrying the AAB upload. Use the existing closed-track draft
+   `13 (1.8.0)` for `com.kitchenforge.app`; recheck uploaded version codes and
+   signing identity before upload. Renaming the draft did not upload a binary.
+4. Review the saved default-listing draft, restore the registered privacy
    URL or register the verified public fallback, and update Data safety for ML Kit SDK
    diagnostics. The photos/OCR content are not uploaded, but the bundled Android
    SDK collects diagnostic/per-installation data. See Google's disclosure below.
 5. After the phone checks and Play validation, submit the update on the appropriate
-   existing track. Do not create a duplicate app or claim a submission is live.
+   existing track. Production remains subject to the Console's tester requirement.
+   Do not create a duplicate app or claim a submission is live.
 
 ## iOS delivery
 
 1. The Account Holder must accept the updated Apple Developer Program License
-   Agreement before version 1.8.0 can be created in App Store Connect. Complete
-   Codemagic sign-in, select the existing KitchenForge repo and `ios-workflow`,
-   and confirm the App Store Connect integration still has valid signing access.
-2. Use Xcode 26.6, compare build 15 against current uploaded builds, then run the
-   workflow. It generates the Xcode project, signs an IPA and uploads to TestFlight.
+   Agreement before version 1.8.0 can be created in App Store Connect. Reconnect
+   the browser bridge to continue in the verified existing account and app.
+2. Resolve the Apple ID lookup failure from Codemagic build 25. The app's bundle
+   ID was verified in App Store Connect; the cause of the failed lookup is not
+   established. Recheck uploaded builds and retry upload of the verified signed
+   IPA after the agreement/integration state is corrected.
 3. The existing workflow keeps `submit_to_app_store: false` so an untested camera
    implementation is not automatically released. Test the signed build on a phone.
 4. In the existing App Store Connect KitchenForge record (Apple ID 6761285586),
